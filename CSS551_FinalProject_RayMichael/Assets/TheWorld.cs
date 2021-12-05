@@ -8,6 +8,15 @@ public class TheWorld : MonoBehaviour
     public SceneNode TheRoot;
     public Transform mSelected;
 
+
+    // claw related variables
+    public List<Transform> clawNodes;
+
+    [Range(27, 75)]
+    public float angle = 45;
+    private float rotateSpeed;
+    public bool OpenClawFlag = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -17,6 +26,8 @@ public class TheWorld : MonoBehaviour
         SceneNode cn1 = mSelected.GetComponent<SceneNode>();
         
         //cn1.CreateAxisFrame();
+
+        rotateSpeed = (75-angle)/600f;
     }
 
     // Update is called once per frame
@@ -24,6 +35,17 @@ public class TheWorld : MonoBehaviour
     {
         Matrix4x4 i = Matrix4x4.identity;
         TheRoot.CompositeXform(ref i);
+
+        if (OpenClawFlag) {
+            OpenClaw();
+        }
+
+        foreach (Transform claw in clawNodes)
+        {
+            Quaternion q = new Quaternion();
+            q.eulerAngles = new Vector3(claw.localRotation.eulerAngles.x, claw.localRotation.eulerAngles.y, angle);
+            claw.localRotation = q;
+        }
     }
 
     public void SetSelected(Transform selected)
@@ -45,6 +67,14 @@ public class TheWorld : MonoBehaviour
             
             //cn2.CreateAxisFrame();
             mSelected = selected;
+        }
+    }
+
+    public void OpenClaw() {
+        if (angle <= 75) {
+            angle += rotateSpeed;
+        } else {
+            OpenClawFlag = false;
         }
     }
 }
