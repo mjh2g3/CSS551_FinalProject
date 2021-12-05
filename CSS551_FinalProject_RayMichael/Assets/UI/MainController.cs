@@ -9,7 +9,7 @@ public partial class MainController : MonoBehaviour
 
     private GameObject mSelected;
     private Vector3 clawPos = Vector3.zero;
-    private float speed = 0.01f;
+    private float speed = 0.05f;
 
     public Transform LookAt = null;
 
@@ -18,6 +18,12 @@ public partial class MainController : MonoBehaviour
 
     private const float kPixelToDegree = 0.1f;
     private const float kPixelToDistant = 0.05f;
+
+    //CraneArea
+    private float leftWall = -3.5f;
+    private float rightWall = 3.5f;
+    private float backWall = 3.5f;
+    private float frontWall = -3.5f;
 
 
     // Start is called before the first frame update
@@ -40,7 +46,7 @@ public partial class MainController : MonoBehaviour
         if (Input.GetKey(KeyCode.UpArrow))
         {
             //Move the crane claw "up" in positive Z direction
-            if (clawPos.z < 3.0f)
+            if (clawPos.z < backWall)
             {
                 Vector3 pos = new Vector3();
                 pos.z = pos.z + speed * 1.0f;
@@ -54,7 +60,7 @@ public partial class MainController : MonoBehaviour
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
             //Move the crane claw "left" in negative X direction
-            if (clawPos.x > -3.0f)
+            if (clawPos.x > leftWall)
             {
                 Vector3 pos = new Vector3();
                 pos.x = pos.x + speed * -1.0f;
@@ -67,7 +73,7 @@ public partial class MainController : MonoBehaviour
         else if (Input.GetKey(KeyCode.RightArrow))
         {
             //Move the crane claw "right" in positive X direction
-            if (clawPos.x < 3.0f)
+            if (clawPos.x < rightWall)
             {
                 Vector3 pos = new Vector3();
                 pos.x = pos.x + speed * 1.0f;
@@ -80,7 +86,7 @@ public partial class MainController : MonoBehaviour
         else if (Input.GetKey(KeyCode.DownArrow))
         {
             //Move the crane claw "down" in negative Z direction
-            if (clawPos.z > -3.0f)
+            if (clawPos.z > frontWall)
             {
                 Vector3 pos = new Vector3();
                 pos.z = pos.z + speed * -1.0f;
