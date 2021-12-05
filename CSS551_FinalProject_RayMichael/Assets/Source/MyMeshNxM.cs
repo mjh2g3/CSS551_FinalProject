@@ -54,83 +54,6 @@ public class MyMeshNxM : MonoBehaviour
 
     public void MeshInitialization()
     {
-        /*
-        //Step 1: Obtain the mesh component and delete whatever is there
-        Mesh theMesh = GetComponent<MeshFilter>().mesh;   // get the mesh component
-        theMesh.Clear();    // delete whatever is there!!
-
-        //Step 2: Identify the number of N, M, and Triangles
-        int numTriangles = (N - 1) * (M - 1) * 2;
-
-        //Step 3: Create arrays for vertices, triangle vertices, normals, and uv vertices
-        verts = new Vector3[N * M];         // NxM Mesh needs NxM vertices
-        tris = new int[numTriangles * 3];  // Number of triangles = (N-1) * (M-1) * 2, and each triangle has 3 vertices
-        norms = new Vector3[N * M];         // MUST be the same as number of vertices
-        //uv = new Vector2[N * M];
-
-        //Step 4: Define dN and dM which are the distances between each vertex in the N and M direction
-        float dN = meshLength / (N - 1);
-        float dM = meshWidth / (M - 1);
-
-        //Step 5a: Define a start point (lower left corner of mesh) and variable to track which triangle is being created
-        Vector3 startVertex = new Vector3(-4.0f, 0.0f, -4.0f);
-        int currentTriangle = 0;
-
-        //Step 5b: Define start point (lower left corner of mesh) for the UV vertices
-        //Vector2 startUV = new Vector2(-5, -5);
-
-        //Step 6: Compute the vertices, triangle vertices, and normal vectors at each vertex
-        for (int n = 0; n < N; n++)
-        {
-            for (int m = 0; m < M; m++)
-            {
-                // define current vertex position
-                verts[n * M + m] = startVertex + new Vector3(0, m * dM, n * dN);
-
-                //uv[n * M + m] = startUV + new Vector2(m * dM / meshWidth, n * dN / meshLength);
-
-                // process two new triangles that can be traversed from current vertex
-                if (currentTriangle < numTriangles && m < M - 1)
-                {
-                    tris[currentTriangle * 3] = n * M + m;
-                    tris[currentTriangle * 3 + 1] = (n + 1) * M + m;
-                    tris[currentTriangle * 3 + 2] = (n + 1) * M + (m + 1);
-                    currentTriangle++; // increment currentTriangle
-
-                    tris[currentTriangle * 3] = n * M + m;
-                    tris[currentTriangle * 3 + 1] = (n + 1) * M + (m + 1);
-                    tris[currentTriangle * 3 + 2] = n * M + (m + 1);
-                    currentTriangle++; // increment currentTriangle
-                }
-                Debug.Log(verts[n * M + m]);
-            }
-        }
-        for (int idx = 0; idx < norms.Length; idx++)
-        {
-            norms[idx] = new Vector3(0, 1, 0);
-        }
-
-        //Step 7: Assign the vertices, triangles, and normal vectors to the mesh
-        theMesh.vertices = verts;
-        theMesh.triangles = tris;
-        theMesh.normals = norms;
-        //theMesh.uv = uv;
-
-        //GetComponent<TexturePlacement>().SaveInitUV(uv);
-
-
-
-        */
-
-
-
-
-
-
-
-
-
-
         //Step 1: Obtain the mesh component and delete whatever is there
         Mesh theMesh = GetComponent<MeshFilter>().mesh;   // get the mesh component
         theMesh.Clear();    // delete whatever is there!!
@@ -218,19 +141,5 @@ public class MyMeshNxM : MonoBehaviour
            theMesh.vertices = verts; //  new Vector3[3];
            theMesh.triangles = tris; //  new int[3];
            theMesh.normals = norms;
-
-
-
-
-
-
-
     }
-
-
-
-
-
-
-
 }
