@@ -5,11 +5,17 @@ using UnityEngine;
 public class TheWorld2 : MonoBehaviour
 {
     public Transform clawPos = null;
-    
+    public MyMeshNxM upperBox = null;
+    public MyMeshNxM lowerBox = null;
+
     // Start is called before the first frame update
     void Start()
     {
         Debug.Assert(clawPos != null);
+        Debug.Assert(upperBox != null);
+        Debug.Assert(lowerBox != null);
+
+        upperBox.SetHeight(3.5f);
     }
 
     // Update is called once per frame
