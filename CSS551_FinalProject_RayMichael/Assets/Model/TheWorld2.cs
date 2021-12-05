@@ -17,4 +17,13 @@ public class TheWorld2 : MonoBehaviour
     {
         
     }
+
+    public Vector3 UpdateClawPosition(Vector3 pos)
+    {
+        Vector3 curPos = clawPos.localPosition;
+        curPos.x = pos.x;
+        curPos.z = pos.z;
+        clawPos.localPosition = curPos;
+        return clawPos.localPosition;
+    }
 }
