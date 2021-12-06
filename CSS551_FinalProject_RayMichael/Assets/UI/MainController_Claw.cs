@@ -11,9 +11,18 @@ public class MainController_Claw : MonoBehaviour
     }
     private void ClawMovement() {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            // Add claw dropping movement
-            Debug.Log("Opening claw");
-            mModel.OpenClawFlag = true;
+            if (mModel.clawActionFlag == "standby") {
+                // Add claw dropping movement
+                Debug.Log("Dropping Claw");
+                mModel.clawActionFlag = "drop";
+            } else {
+                Debug.Log("Releasing Claw");
+                mModel.clawActionFlag = "open";
+            }
         }
+        // if (Input.GetKeyUp(KeyCode.Space)) {
+        //     Debug.Log("Reset claw");
+        //     mModel.clawActionFlag = 0;
+        // }
     }
 }
