@@ -8,6 +8,10 @@ public class TheWorld : MonoBehaviour
     public SceneNode TheRoot;
     public Transform mSelected;
 
+    //Crane Controller Variables
+    private bool TrackHandle = false;
+
+
 
     // claw related variables
     public List<Transform> clawNodes;
@@ -77,4 +81,30 @@ public class TheWorld : MonoBehaviour
             OpenClawFlag = false;
         }
     }
+
+    /*
+    public void HandleTrackTarget()
+    {
+        if (TrackHandle)
+        {
+            // do joint
+            Vector3 jointDir = FrontTip.localPosition - ChildOrg.localPosition;
+            TheChild.RotateUpTowardsBy(childDir, ChildDelta);
+            UpdateHierarchy();
+
+            // do stick
+            Vector3 stickDir = FrontTip.localPosition - FrontOrg.localPosition;
+            TheFront.AlignUpWith(dir);
+            UpdateHierarchy();
+
+            // do handle
+            Vector3 handleDir = FrontTip.localPosition - FrontOrg.localPosition;
+            TheFront.AlignUpWith(dir);
+            UpdateHierarchy();
+
+            FrontTip.localPosition = FrontOrg.localPosition + FrontHeight * FrontOrg.up;
+            FrontTip.localRotation = FrontOrg.localRotation;
+        }
+    }
+    */
 }

@@ -8,7 +8,7 @@ public partial class MainController : MonoBehaviour
     public TheWorld2 mModel = null;
 
     private GameObject mSelected;
-    private Vector3 clawPos = Vector3.zero;
+    private Vector3 clawPos = new Vector3(0.0f, 3.5f, 0.0f);
     private float speed = 0.05f;
 
     public Transform LookAt = null;
@@ -25,6 +25,13 @@ public partial class MainController : MonoBehaviour
     private float backWall = 3.5f;
     private float frontWall = -3.5f;
 
+    //Controller Buttons
+    public NodePrimitive handle;
+    public NodePrimitive dropBtn;
+    public NodePrimitive resetBtn;
+    private bool Drop = false;
+    private bool Lift = false;
+    private float timer = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +39,11 @@ public partial class MainController : MonoBehaviour
         Debug.Assert(mainCamera != null);
         Debug.Assert(mModel != null);
         Debug.Assert(LookAt != null);
+
+        Debug.Assert(handle != null);
+        Debug.Assert(dropBtn != null);
+        Debug.Assert(resetBtn != null);
+        
     }
 
     // Update is called once per frame
@@ -39,7 +51,133 @@ public partial class MainController : MonoBehaviour
     {
         CraneMovement();
         CamManipulation();
+        LMB();
+        if (Drop)
+        {
+            DropClaw();
+        }
+        if (Lift)
+        {
+            LiftClaw();
+        }
     }
+
+    private void LMB()
+    {
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            Debug.Log("Clicked the left mouse button");
+            RaycastHit hitInfo = new RaycastHit();
+            bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity);
+            if (hit)
+            {
+                Debug.Log(hitInfo.transform.gameObject.name);
+                Debug.Log(hitInfo.point);
+                if (ComputeHandleDetection(hitInfo.point))
+                {
+                    Debug.Log("You hit the handle!");
+                }
+                else if (ComputeDropDetection(hitInfo.point))
+                {
+                    Debug.Log("You hit the drop button!");
+                    Drop = true;
+                }
+                else if (ComputeResetDetection(hitInfo.point))
+                {
+                    Debug.Log("You hit the reset button!");
+                    ResetClaw();
+                }
+            }
+            else
+            {
+                //SelectObject(null, );
+            }
+        }
+    }
+
+    private bool ComputeHandleDetection(Vector3 pos2)
+    {
+        bool hit = false;
+        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
+        Vector3 pos1 = mainCamera.transform.localPosition;
+        Vector3 V = pos2 - pos1;
+        float len = V.magnitude;
+        V = V / len;
+
+        Vector3 X = handle.GetLocalPosition() - pos1;
+        float h = Vector3.Dot(X, V);
+
+        Vector3 scaleHandle = handle.GetLocalScale();
+        float r = scaleHandle.x * 0.5f;
+
+        Vector3 ph;
+        float d, a;
+
+        d = Mathf.Sqrt(X.sqrMagnitude - (h * h));
+        if (d < r)
+        {
+            hit = true;
+        }
+
+        return hit;
+    }
+
+    private bool ComputeDropDetection(Vector3 pos2)
+    {
+        bool hit = false;
+        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
+        Vector3 pos1 = mainCamera.transform.localPosition;
+        Vector3 V = pos2 - pos1;
+        float len = V.magnitude;
+        V = V / len;
+
+        Vector3 X = dropBtn.GetLocalPosition() - pos1;
+        float h = Vector3.Dot(X, V);
+
+        Vector3 scaleHandle = dropBtn.GetLocalScale();
+        float r = scaleHandle.x * 0.5f;
+
+        Vector3 ph;
+        float d, a;
+
+        d = Mathf.Sqrt(X.sqrMagnitude - (h * h));
+        if (d < r)
+        {
+            hit = true;
+        }
+
+        return hit;
+    }
+
+    private bool ComputeResetDetection(Vector3 pos2)
+    {
+        bool hit = false;
+        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
+        Vector3 pos1 = mainCamera.transform.localPosition;
+        Vector3 V = pos2 - pos1;
+        float len = V.magnitude;
+        V = V / len;
+
+        Vector3 X = resetBtn.GetLocalPosition() - pos1;
+        float h = Vector3.Dot(X, V);
+
+        Vector3 scaleHandle = resetBtn.GetLocalScale();
+        float r = scaleHandle.x * 0.5f;
+
+        Vector3 ph;
+        float d, a;
+
+        d = Mathf.Sqrt(X.sqrMagnitude - (h * h));
+        if (d < r)
+        {
+            hit = true;
+        }
+
+        return hit;
+    }
+
 
     private void CraneMovement()
     {
@@ -95,5 +233,57 @@ public partial class MainController : MonoBehaviour
             }
             clawPos = mModel.UpdateClawPosition(clawPos);
         }
+    }
+
+    private void DropClaw()
+    {
+        //Drop the crane claw in negative Y direction
+        timer += Time.deltaTime;
+        Debug.Log(timer);
+
+        
+        //Vector3 pos = new Vector3();
+       //pos.y = clawPos.y;
+        if (clawPos.y > 0.1f)
+        {
+            Vector3 pos = new Vector3();
+            pos.y = pos.y + (speed + 0.75f) * -1.0f * Time.deltaTime;
+            clawPos.y += pos.y;
+            Debug.Log(clawPos);
+            clawPos = mModel.UpdateClawPosition(clawPos);
+            Debug.Log("Dropping the claw");
+        }
+        else
+        {
+            Drop = false;
+            Lift = true;
+        }        
+    }
+
+    private void LiftClaw()
+    {
+        if ((clawPos.y > 0.0f) && (clawPos.y < 3.5f))
+        {
+            Vector3 pos = new Vector3();
+            pos.y = pos.y + (speed + 0.75f) * 1.0f * Time.deltaTime;
+            clawPos.y += pos.y;
+            Debug.Log(clawPos);
+            clawPos = mModel.UpdateClawPosition(clawPos);
+            Debug.Log("Lifting the claw");
+        }
+        else
+        {
+            Lift = false;
+        }
+    }
+
+    private void ResetClaw()
+    {
+        //Reset the claw to original position
+        Vector3 orig = new Vector3();
+        orig.y = 3.5f;
+        orig.x = 0.0f;
+        orig.z = 0.0f;
+        clawPos = mModel.UpdateClawPosition(orig);
     }
 }
