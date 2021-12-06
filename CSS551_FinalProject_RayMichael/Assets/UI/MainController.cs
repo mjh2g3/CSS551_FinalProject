@@ -8,7 +8,7 @@ public partial class MainController : MonoBehaviour
     public TheWorld2 mModel = null;
 
     private GameObject mSelected;
-    private Vector3 clawPos = Vector3.zero;
+    private Vector3 clawPos = new Vector3(0.0f, 3.5f, 0.0f);
     private float speed = 0.05f;
 
     public Transform LookAt = null;
@@ -72,7 +72,7 @@ public partial class MainController : MonoBehaviour
                 {
                     Debug.Log("You hit the drop button!");
                     DropClaw();
-                    LiftClaw();
+                    //LiftClaw();
                 }
                 else if (ComputeResetDetection(hitInfo.point))
                 {
@@ -228,14 +228,20 @@ public partial class MainController : MonoBehaviour
     private void DropClaw()
     {
         //Drop the crane claw in negative Y direction
-        while (clawPos.y > 0)
+        Debug.Log("Dropping the claw");
+        Vector3 pos = new Vector3();
+        pos.y = clawPos.y;
+        while (pos.y > 0.1f)
         {
-            Vector3 pos = new Vector3();
             pos.y = pos.y + speed * -1.0f;
-            clawPos += pos;
-            Debug.Log(clawPos);
+            Debug.Log("The current y = " + pos.y);
+            clawPos.y = pos.y;
             clawPos = mModel.UpdateClawPosition(clawPos);
+            //clawPos += pos;
+            //Debug.Log(clawPos);
+            //clawPos = mModel.UpdateClawPosition(clawPos);
         }
+
     }
 
     private void LiftClaw()
@@ -256,6 +262,8 @@ public partial class MainController : MonoBehaviour
         //Reset the claw to original position
         Vector3 orig = new Vector3();
         orig.y = 3.5f;
-        clawPos = mModel.UpdateClawPosition(clawPos);
+        orig.x = 0.0f;
+        orig.z = 0.0f;
+        clawPos = mModel.UpdateClawPosition(orig);
     }
 }
