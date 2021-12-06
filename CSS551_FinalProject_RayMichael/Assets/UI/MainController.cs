@@ -25,6 +25,8 @@ public partial class MainController : MonoBehaviour
     private float backWall = 3.5f;
     private float frontWall = -3.5f;
 
+    //Controller Buttons
+    public NodePrimitive handle;
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +41,61 @@ public partial class MainController : MonoBehaviour
     {
         CraneMovement();
         CamManipulation();
+        LMB();
     }
+
+    private void LMB()
+    {
+        
+        if (Input.GetMouseButtonDown(0))
+        {
+
+            Debug.Log("Clicked the left mouse button");
+            RaycastHit hitInfo = new RaycastHit();
+            bool hit = Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hitInfo, Mathf.Infinity);
+            if (hit)
+            {
+                Debug.Log(hitInfo.transform.gameObject.name);
+                Debug.Log(hitInfo.point);
+                if (ComputeHandleDetection(hitInfo.point))
+                {
+                    Debug.Log("You hit the handle!");
+                }
+            }
+            else
+            {
+                //SelectObject(null, );
+            }
+        }
+    }
+
+    private bool ComputeHandleDetection(Vector3 pos2)
+    {
+        bool hit = false;
+        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
+        Vector3 pos1 = mainCamera.transform.localPosition;
+        Vector3 V = pos2 - pos1;
+        float len = V.magnitude;
+        V = V / len;
+
+        Vector3 X = handle.GetLocalPosition() - pos1;
+        float h = Vector3.Dot(X, V);
+
+        Vector3 scaleHandle = handle.GetLocalScale();
+        float r = scaleHandle.x * 0.5f;
+
+        Vector3 ph;
+        float d, a;
+
+        d = Mathf.Sqrt(X.sqrMagnitude - (h * h));
+        if (d < r)
+        {
+            hit = true;
+        }
+
+        return hit;
+    }
+
 
     private void CraneMovement()
     {
