@@ -29,6 +29,9 @@ public partial class MainController : MonoBehaviour
     public NodePrimitive handle;
     public NodePrimitive dropBtn;
     public NodePrimitive resetBtn;
+    private bool Drop = false;
+    private bool Lift = false;
+    private float timer = 0.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +52,14 @@ public partial class MainController : MonoBehaviour
         CraneMovement();
         CamManipulation();
         LMB();
+        if (Drop)
+        {
+            DropClaw();
+        }
+        if (Lift)
+        {
+            LiftClaw();
+        }
     }
 
     private void LMB()
@@ -71,8 +82,7 @@ public partial class MainController : MonoBehaviour
                 else if (ComputeDropDetection(hitInfo.point))
                 {
                     Debug.Log("You hit the drop button!");
-                    DropClaw();
-                    //LiftClaw();
+                    Drop = true;
                 }
                 else if (ComputeResetDetection(hitInfo.point))
                 {
@@ -228,32 +238,42 @@ public partial class MainController : MonoBehaviour
     private void DropClaw()
     {
         //Drop the crane claw in negative Y direction
-        Debug.Log("Dropping the claw");
-        Vector3 pos = new Vector3();
-        pos.y = clawPos.y;
-        while (pos.y > 0.1f)
-        {
-            pos.y = pos.y + speed * -1.0f;
-            Debug.Log("The current y = " + pos.y);
-            clawPos.y = pos.y;
-            clawPos = mModel.UpdateClawPosition(clawPos);
-            //clawPos += pos;
-            //Debug.Log(clawPos);
-            //clawPos = mModel.UpdateClawPosition(clawPos);
-        }
+        timer += Time.deltaTime;
+        Debug.Log(timer);
 
+        
+        //Vector3 pos = new Vector3();
+       //pos.y = clawPos.y;
+        if (clawPos.y > 0.1f)
+        {
+            Vector3 pos = new Vector3();
+            pos.y = pos.y + (speed + 0.75f) * -1.0f * Time.deltaTime;
+            clawPos.y += pos.y;
+            Debug.Log(clawPos);
+            clawPos = mModel.UpdateClawPosition(clawPos);
+            Debug.Log("Dropping the claw");
+        }
+        else
+        {
+            Drop = false;
+            Lift = true;
+        }        
     }
 
     private void LiftClaw()
     {
-        //Lift the crane claw in positive Y direction
-        while (clawPos.y < 3.5)
+        if ((clawPos.y > 0.0f) && (clawPos.y < 3.5f))
         {
             Vector3 pos = new Vector3();
-            pos.y = pos.y + speed * 1.0f;
-            clawPos += pos;
+            pos.y = pos.y + (speed + 0.75f) * 1.0f * Time.deltaTime;
+            clawPos.y += pos.y;
             Debug.Log(clawPos);
             clawPos = mModel.UpdateClawPosition(clawPos);
+            Debug.Log("Lifting the claw");
+        }
+        else
+        {
+            Lift = false;
         }
     }
 
