@@ -27,6 +27,8 @@ public partial class MainController : MonoBehaviour
 
     //Controller Buttons
     public NodePrimitive handle;
+    public NodePrimitive dropBtn;
+    public NodePrimitive resetBtn;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +36,11 @@ public partial class MainController : MonoBehaviour
         Debug.Assert(mainCamera != null);
         Debug.Assert(mModel != null);
         Debug.Assert(LookAt != null);
+
+        Debug.Assert(handle != null);
+        Debug.Assert(dropBtn != null);
+        Debug.Assert(resetBtn != null);
+        
     }
 
     // Update is called once per frame
@@ -61,6 +68,17 @@ public partial class MainController : MonoBehaviour
                 {
                     Debug.Log("You hit the handle!");
                 }
+                else if (ComputeDropDetection(hitInfo.point))
+                {
+                    Debug.Log("You hit the drop button!");
+                    DropClaw();
+                    LiftClaw();
+                }
+                else if (ComputeResetDetection(hitInfo.point))
+                {
+                    Debug.Log("You hit the reset button!");
+                    ResetClaw();
+                }
             }
             else
             {
@@ -82,6 +100,60 @@ public partial class MainController : MonoBehaviour
         float h = Vector3.Dot(X, V);
 
         Vector3 scaleHandle = handle.GetLocalScale();
+        float r = scaleHandle.x * 0.5f;
+
+        Vector3 ph;
+        float d, a;
+
+        d = Mathf.Sqrt(X.sqrMagnitude - (h * h));
+        if (d < r)
+        {
+            hit = true;
+        }
+
+        return hit;
+    }
+
+    private bool ComputeDropDetection(Vector3 pos2)
+    {
+        bool hit = false;
+        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
+        Vector3 pos1 = mainCamera.transform.localPosition;
+        Vector3 V = pos2 - pos1;
+        float len = V.magnitude;
+        V = V / len;
+
+        Vector3 X = dropBtn.GetLocalPosition() - pos1;
+        float h = Vector3.Dot(X, V);
+
+        Vector3 scaleHandle = dropBtn.GetLocalScale();
+        float r = scaleHandle.x * 0.5f;
+
+        Vector3 ph;
+        float d, a;
+
+        d = Mathf.Sqrt(X.sqrMagnitude - (h * h));
+        if (d < r)
+        {
+            hit = true;
+        }
+
+        return hit;
+    }
+
+    private bool ComputeResetDetection(Vector3 pos2)
+    {
+        bool hit = false;
+        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
+        Vector3 pos1 = mainCamera.transform.localPosition;
+        Vector3 V = pos2 - pos1;
+        float len = V.magnitude;
+        V = V / len;
+
+        Vector3 X = resetBtn.GetLocalPosition() - pos1;
+        float h = Vector3.Dot(X, V);
+
+        Vector3 scaleHandle = resetBtn.GetLocalScale();
         float r = scaleHandle.x * 0.5f;
 
         Vector3 ph;
@@ -151,5 +223,39 @@ public partial class MainController : MonoBehaviour
             }
             clawPos = mModel.UpdateClawPosition(clawPos);
         }
+    }
+
+    private void DropClaw()
+    {
+        //Drop the crane claw in negative Y direction
+        while (clawPos.y > 0)
+        {
+            Vector3 pos = new Vector3();
+            pos.y = pos.y + speed * -1.0f;
+            clawPos += pos;
+            Debug.Log(clawPos);
+            clawPos = mModel.UpdateClawPosition(clawPos);
+        }
+    }
+
+    private void LiftClaw()
+    {
+        //Lift the crane claw in positive Y direction
+        while (clawPos.y < 3.5)
+        {
+            Vector3 pos = new Vector3();
+            pos.y = pos.y + speed * 1.0f;
+            clawPos += pos;
+            Debug.Log(clawPos);
+            clawPos = mModel.UpdateClawPosition(clawPos);
+        }
+    }
+
+    private void ResetClaw()
+    {
+        //Reset the claw to original position
+        Vector3 orig = new Vector3();
+        orig.y = 3.5f;
+        clawPos = mModel.UpdateClawPosition(clawPos);
     }
 }

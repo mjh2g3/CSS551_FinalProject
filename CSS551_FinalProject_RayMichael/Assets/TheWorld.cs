@@ -82,6 +82,7 @@ public class TheWorld : MonoBehaviour
         }
     }
 
+    /*
     public void HandleTrackTarget()
     {
         if (TrackHandle)
@@ -105,4 +106,5 @@ public class TheWorld : MonoBehaviour
             FrontTip.localRotation = FrontOrg.localRotation;
         }
     }
+    */
 }
