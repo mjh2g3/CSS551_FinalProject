@@ -74,19 +74,18 @@ public class TheWorld : MonoBehaviour
         if (clawActionFlag == "drop") {
             DroppingClawAnimation();
 
+        } else if (clawActionFlag == "close") {
+            ClosingClawAnimation();
+
         } else if (clawActionFlag == "raise") {
             RaisingClawAnimation();
 
         } else if (clawActionFlag == "open") {
             OpeningClawAnimation();
 
-        } else if (clawActionFlag == "close") {
-            ClosingClawAnimation();
-
         } else if (clawActionFlag == "reset") {
             ResettingClawAnimation();
         }
-
 
     }
 
