@@ -6,7 +6,7 @@ public class TheWorld2 : MonoBehaviour
 {
     public Transform clawPos = null;
     public Transform clawBase = null;
-    private float grabThreshold = 1f;
+    private float grabThreshold = 2f;
     private Transform mGrabbed = null;
 
     public MyMeshNxM upperBox = null;
@@ -70,14 +70,15 @@ public class TheWorld2 : MonoBehaviour
     {
         //Define the start and end point of the axis beam
         Vector3 startPoint = clawPos.transform.localPosition;
+        Debug.Log(startPoint);
         Vector3 endPoint = clawPos.transform.localPosition + clawPos.transform.up * sightMagnitude;
 
         //Find the vector v between end point of axis direction beam
         Vector3 v = endPoint - startPoint;
 
         //Set the beam upright to align to the correct axis direction and compute the position of the axis
-        sightLine.transform.up = clawPos.transform.up;
-        sightLine.transform.localPosition = clawPos.transform.localPosition + v;
+        sightLine.transform.up = -clawPos.transform.up;
+        sightLine.transform.localPosition = clawPos.transform.localPosition + 0.75f * v;
     }
 
     public void UpdateClawCam()
