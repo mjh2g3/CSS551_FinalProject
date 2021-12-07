@@ -5,7 +5,8 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class TheWorld : MonoBehaviour
 {
-    public SceneNode TheRoot;
+    public SceneNode TheClawRoot;
+    public SceneNode TheControllerRoot;
     public Transform mSelected;
 
     //Crane Controller Variables
@@ -22,8 +23,11 @@ public class TheWorld : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Assert(TheRoot != null);
-        mSelected = TheRoot.transform;
+        Debug.Assert(TheClawRoot != null);
+        Debug.Assert(TheControllerRoot != null);
+
+
+        mSelected = TheClawRoot.transform;
 
         SceneNode cn1 = mSelected.GetComponent<SceneNode>();
         
@@ -38,9 +42,16 @@ public class TheWorld : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Matrix4x4 i = Matrix4x4.identity;
-        TheRoot.CompositeXform(ref i);
 
+        Matrix4x4 j = Matrix4x4.identity;
+        TheControllerRoot.CompositeXform(ref j);
+        Debug.Log("Setthe ControllerRoot");
+
+        Matrix4x4 i = Matrix4x4.identity;
+        TheClawRoot.CompositeXform(ref i);
+        Debug.Log("Setthe ClawRoot");
+
+       
         UpdateClawAnimations();
     }
 
