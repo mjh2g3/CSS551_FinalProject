@@ -244,7 +244,7 @@ public partial class MainController : MonoBehaviour
         
         //Vector3 pos = new Vector3();
        //pos.y = clawPos.y;
-        if (clawPos.y > 0.1f)
+        if (clawPos.y > 1f)
         {
             Vector3 pos = new Vector3();
             pos.y = pos.y + (speed + 0.75f) * -1.0f * Time.deltaTime;
@@ -255,6 +255,7 @@ public partial class MainController : MonoBehaviour
         }
         else
         {
+            mModel.GrabPrize();
             Drop = false;
             Lift = true;
         }        
@@ -285,5 +286,7 @@ public partial class MainController : MonoBehaviour
         orig.x = 0.0f;
         orig.z = 0.0f;
         clawPos = mModel.UpdateClawPosition(orig);
+        
+        Drop = false;
     }
 }
