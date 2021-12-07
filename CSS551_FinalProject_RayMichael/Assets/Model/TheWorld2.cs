@@ -31,7 +31,7 @@ public class TheWorld2 : MonoBehaviour
         sightLine = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
         Vector3 scale = new Vector3(0.05f, sightMagnitude / 2, 0.05f);
         sightLine.transform.localScale = scale;
-        sightLine.transform.up = -(clawPos.transform.up);
+        sightLine.transform.up = clawPos.transform.up;
     }
 
     // Update is called once per frame
@@ -70,19 +70,19 @@ public class TheWorld2 : MonoBehaviour
     {
         //Define the start and end point of the axis beam
         Vector3 startPoint = clawPos.transform.localPosition;
-        Vector3 endPoint = clawPos.transform.localPosition + -(clawPos.transform.up) * sightMagnitude;
+        Vector3 endPoint = clawPos.transform.localPosition + clawPos.transform.up * sightMagnitude;
 
         //Find the vector v between end point of axis direction beam
         Vector3 v = endPoint - startPoint;
 
         //Set the beam upright to align to the correct axis direction and compute the position of the axis
-        sightLine.transform.up = -(clawPos.transform.up);
-        sightLine.transform.localPosition = clawPos.transform.localPosition + 0.5f * v;
+        sightLine.transform.up = clawPos.transform.up;
+        sightLine.transform.localPosition = clawPos.transform.localPosition + v;
     }
 
     public void UpdateClawCam()
     {
-        clawCam.transform.forward = -(clawPos.transform.up);
+        clawCam.transform.forward = clawPos.transform.up;
         clawCam.transform.localPosition = clawPos.transform.localPosition;
     }
 }
