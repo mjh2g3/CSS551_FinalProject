@@ -5,12 +5,17 @@ using UnityEngine;
 public class TheWorld2 : MonoBehaviour
 {
     public Transform clawPos = null;
+    public Transform clawBase = null;
+    private float grabThreshold = 1f;
+    private Transform mGrabbed = null;
+
     public MyMeshNxM upperBox = null;
     public MyMeshNxM lowerBox = null;
 
     private GameObject sightLine;
     private float sightMagnitude = 3.0f;
     public Camera clawCam = null;
+    public List<Transform> prizes;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +49,21 @@ public class TheWorld2 : MonoBehaviour
         curPos.y = pos.y;
         clawPos.localPosition = curPos;
         return clawPos.localPosition;
+    }
+
+    public void GrabPrize() {
+        // checks each prize to see if a prize is grabbed
+        foreach (Transform p in prizes) {
+            float distance = (p.position - clawPos.position).magnitude;
+            if (distance <= grabThreshold) {
+                mGrabbed = p;
+                mGrabbed.parent = clawPos;
+                
+                float localY = -(1f);
+                clawPos.localPosition = new Vector3(0, localY, 0);
+                break;
+            }
+        }
     }
 
     public void UpdateLineOfSight()
