@@ -84,16 +84,10 @@ public class TheWorld : MonoBehaviour
     void UpdateClawAnimations() {
         if (clawActionFlag == "drop") {
             DroppingClawAnimation();
-
         } else if (clawActionFlag == "close") {
             ClosingClawAnimation();
-
-        } else if (clawActionFlag == "raise") {
-            RaisingClawAnimation();
-
         } else if (clawActionFlag == "open") {
             OpeningClawAnimation();
-
         } else if (clawActionFlag == "reset") {
             ResettingClawAnimation();
         }
@@ -101,19 +95,13 @@ public class TheWorld : MonoBehaviour
     }
 
     void DroppingClawAnimation() {
-        if (clawBase.position.y >= 1.5){
-            clawBase.position -= new Vector3(0, moveSpeed, 0);
-        } if (clawNodes[0].localEulerAngles.z < 75) {
+        if (clawNodes[0].localEulerAngles.z < 75) {
             foreach (Transform claw in clawNodes)
             {
                 Quaternion q = new Quaternion();
                 q.eulerAngles = claw.localRotation.eulerAngles + new Vector3(0, 0, rotateSpeed);
                 claw.localRotation = q;
             }
-        }
-
-        if (clawNodes[0].localEulerAngles.z > 75 && clawBase.position.y < 1.5) {
-            clawActionFlag = "close";
         }
     }
 

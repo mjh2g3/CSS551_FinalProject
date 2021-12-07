@@ -5,10 +5,11 @@ using UnityEngine;
 public partial class MainController : MonoBehaviour
 {
     public Camera mainCamera = null;
-    public TheWorld2 mModel = null;
+    public TheWorld mModel = null;
+    public TheWorld2 mModel2 = null;
 
     private GameObject mSelected;
-    private Vector3 clawPos = new Vector3(0.0f, 3.5f, 0.0f);
+    private Vector3 clawPos = new Vector3(0.0f, 4f, 0.0f);
     private float speed = 0.05f;
 
     public Transform LookAt = null;
@@ -37,7 +38,7 @@ public partial class MainController : MonoBehaviour
     void Start()
     {
         Debug.Assert(mainCamera != null);
-        Debug.Assert(mModel != null);
+        Debug.Assert(mModel2 != null);
         Debug.Assert(LookAt != null);
 
         Debug.Assert(handle != null);
@@ -83,6 +84,7 @@ public partial class MainController : MonoBehaviour
                 {
                     Debug.Log("You hit the drop button!");
                     Drop = true;
+                    mModel.clawActionFlag = "drop";
                 }
                 else if (ComputeResetDetection(hitInfo.point))
                 {
@@ -192,7 +194,7 @@ public partial class MainController : MonoBehaviour
                 Debug.Log(clawPos);
                 //clawPos = mModel.UpdateClawPosition(clawPos);
             }
-            clawPos = mModel.UpdateClawPosition(clawPos);
+            clawPos = mModel2.UpdateClawPosition(clawPos);
 
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
@@ -206,7 +208,7 @@ public partial class MainController : MonoBehaviour
                 Debug.Log(clawPos);
                 //clawPos = mModel.UpdateClawPosition(clawPos);
             }
-            clawPos = mModel.UpdateClawPosition(clawPos);
+            clawPos = mModel2.UpdateClawPosition(clawPos);
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
@@ -219,7 +221,7 @@ public partial class MainController : MonoBehaviour
                 Debug.Log(clawPos);
                 //clawPos = mModel.UpdateClawPosition(clawPos);
             }
-            clawPos = mModel.UpdateClawPosition(clawPos);
+            clawPos = mModel2.UpdateClawPosition(clawPos);
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
@@ -231,7 +233,7 @@ public partial class MainController : MonoBehaviour
                 clawPos += pos;
                 Debug.Log(clawPos);
             }
-            clawPos = mModel.UpdateClawPosition(clawPos);
+            clawPos = mModel2.UpdateClawPosition(clawPos);
         }
     }
 
@@ -239,23 +241,27 @@ public partial class MainController : MonoBehaviour
     {
         //Drop the crane claw in negative Y direction
         timer += Time.deltaTime;
-        Debug.Log(timer);
+        // Debug.Log(timer);
 
         
         //Vector3 pos = new Vector3();
        //pos.y = clawPos.y;
-        if (clawPos.y > 1f)
+       Debug.Log(mModel.clawActionFlag);
+        if (clawPos.y > 1.5f)
         {
             Vector3 pos = new Vector3();
             pos.y = pos.y + (speed + 0.75f) * -1.0f * Time.deltaTime;
             clawPos.y += pos.y;
             Debug.Log(clawPos);
-            clawPos = mModel.UpdateClawPosition(clawPos);
+            clawPos = mModel2.UpdateClawPosition(clawPos);
             Debug.Log("Dropping the claw");
         }
-        else
+        else if (mModel.clawActionFlag == "open") {
+            mModel.clawActionFlag = "close";
+        }
+        else if (mModel.clawActionFlag == "raise")
         {
-            mModel.GrabPrize();
+            mModel2.GrabPrize();
             Drop = false;
             Lift = true;
         }        
@@ -269,7 +275,7 @@ public partial class MainController : MonoBehaviour
             pos.y = pos.y + (speed + 0.75f) * 1.0f * Time.deltaTime;
             clawPos.y += pos.y;
             Debug.Log(clawPos);
-            clawPos = mModel.UpdateClawPosition(clawPos);
+            clawPos = mModel2.UpdateClawPosition(clawPos);
             Debug.Log("Lifting the claw");
         }
         else
@@ -285,7 +291,7 @@ public partial class MainController : MonoBehaviour
         orig.y = 3.5f;
         orig.x = 0.0f;
         orig.z = 0.0f;
-        clawPos = mModel.UpdateClawPosition(orig);
+        clawPos = mModel2.UpdateClawPosition(orig);
         
         Drop = false;
     }
