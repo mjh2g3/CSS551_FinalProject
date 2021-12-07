@@ -191,7 +191,7 @@ public partial class MainController : MonoBehaviour
                 Vector3 pos = new Vector3();
                 pos.z = pos.z + speed * 1.0f;
                 clawPos += pos;
-                Debug.Log(clawPos);
+                // Debug.Log(clawPos);
                 //clawPos = mModel.UpdateClawPosition(clawPos);
             }
             clawPos = mModel2.UpdateClawPosition(clawPos);
@@ -205,7 +205,7 @@ public partial class MainController : MonoBehaviour
                 Vector3 pos = new Vector3();
                 pos.x = pos.x + speed * -1.0f;
                 clawPos += pos;
-                Debug.Log(clawPos);
+                // Debug.Log(clawPos);
                 //clawPos = mModel.UpdateClawPosition(clawPos);
             }
             clawPos = mModel2.UpdateClawPosition(clawPos);
@@ -218,7 +218,7 @@ public partial class MainController : MonoBehaviour
                 Vector3 pos = new Vector3();
                 pos.x = pos.x + speed * 1.0f;
                 clawPos += pos;
-                Debug.Log(clawPos);
+                // Debug.Log(clawPos);
                 //clawPos = mModel.UpdateClawPosition(clawPos);
             }
             clawPos = mModel2.UpdateClawPosition(clawPos);
@@ -231,7 +231,7 @@ public partial class MainController : MonoBehaviour
                 Vector3 pos = new Vector3();
                 pos.z = pos.z + speed * -1.0f;
                 clawPos += pos;
-                Debug.Log(clawPos);
+                // Debug.Log(clawPos);
             }
             clawPos = mModel2.UpdateClawPosition(clawPos);
         }
@@ -252,11 +252,11 @@ public partial class MainController : MonoBehaviour
             Vector3 pos = new Vector3();
             pos.y = pos.y + (speed + 0.75f) * -1.0f * Time.deltaTime;
             clawPos.y += pos.y;
-            Debug.Log(clawPos);
+            // Debug.Log(clawPos);
             clawPos = mModel2.UpdateClawPosition(clawPos);
             Debug.Log("Dropping the claw");
         }
-        else if (mModel.clawActionFlag == "open") {
+        else if (mModel.clawActionFlag == "drop") {
             mModel.clawActionFlag = "close";
         }
         else if (mModel.clawActionFlag == "raise")
@@ -269,12 +269,12 @@ public partial class MainController : MonoBehaviour
 
     private void LiftClaw()
     {
-        if ((clawPos.y > 0.0f) && (clawPos.y < 3.5f))
+        if ((clawPos.y > 0.0f) && (clawPos.y < 4f))
         {
             Vector3 pos = new Vector3();
             pos.y = pos.y + (speed + 0.75f) * 1.0f * Time.deltaTime;
             clawPos.y += pos.y;
-            Debug.Log(clawPos);
+            // Debug.Log(clawPos);
             clawPos = mModel2.UpdateClawPosition(clawPos);
             Debug.Log("Lifting the claw");
         }
