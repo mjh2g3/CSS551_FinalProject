@@ -45,11 +45,11 @@ public class TheWorld : MonoBehaviour
 
         Matrix4x4 j = Matrix4x4.identity;
         TheControllerRoot.CompositeXform(ref j);
-        Debug.Log("Setthe ControllerRoot");
+        // Debug.Log("Setthe ControllerRoot");
 
         Matrix4x4 i = Matrix4x4.identity;
         TheClawRoot.CompositeXform(ref i);
-        Debug.Log("Setthe ClawRoot");
+        // Debug.Log("Setthe ClawRoot");
 
        
         UpdateClawAnimations();
