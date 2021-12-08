@@ -18,7 +18,7 @@ public partial class MainController : MonoBehaviour
     private float mousPosX = 0f;
     private float mousPosY = 0f;
 
-    private const float kPixelToDegree = 0.1f;
+    private const float kPixelToDegree = 0.9f;
     private const float kPixelToDistant = 0.05f;
 
     //CraneArea
@@ -34,6 +34,8 @@ public partial class MainController : MonoBehaviour
     private bool Drop = false;
     private bool Lift = false;
     private float timer = 0.0f;
+
+    private bool handleSelected = false;
 
     // Start is called before the first frame update
     void Start()
@@ -66,9 +68,12 @@ public partial class MainController : MonoBehaviour
 
     private void LMB()
     {
-        
+
         if (Input.GetMouseButtonDown(0))
         {
+            mousPosX = Input.mousePosition.x;
+            mousPosY = Input.mousePosition.y;
+            Debug.Log("Mouse Position is : " + mousPosX + ", " + mousPosY);
 
             Debug.Log("Clicked the left mouse button");
             RaycastHit hitInfo = new RaycastHit();
@@ -80,6 +85,7 @@ public partial class MainController : MonoBehaviour
                 if (ComputeHandleDetection(hitInfo.point))
                 {
                     Debug.Log("You hit the handle!");
+                    handleSelected = true;
                 }
                 else if (ComputeDropDetection(hitInfo.point))
                 {
@@ -99,6 +105,19 @@ public partial class MainController : MonoBehaviour
             {
                 //SelectObject(null, );
             }
+        }
+        else if ((handleSelected) && (Input.GetMouseButton(0))){
+            //Step4: Compute the delta position change for the mouse using the initial and nextPosition
+            float dx = mousPosX - Input.mousePosition.x;
+            mousPosX = Input.mousePosition.x;
+
+            float dy = mousPosY - Input.mousePosition.y;
+            mousPosY = Input.mousePosition.y;
+
+            dx = dx * kPixelToDegree;
+            dy = dy * kPixelToDegree;            
+            mModel3.UpdateJointRotation(dx, dy);
+
         }
     }
 

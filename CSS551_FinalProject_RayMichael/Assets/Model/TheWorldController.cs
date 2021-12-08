@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TheWorldController : MonoBehaviour
 {
@@ -35,11 +36,33 @@ public class TheWorldController : MonoBehaviour
         }
     }
 
-    public Vector3 UpdateJointRotation(Vector3 angle)
+    public void UpdateJointRotation(float dx, float dy)
     {
-        Vector3 rV = Vector3.zero;
-        return rV;
+        //Up vector
+        Vector2 up2 = Vector2.up;
+        Vector2 nxt = new Vector2(dx, dy);
+
+        Debug.Log("Degrees for dx = " + dx);
+        Debug.Log("Degrees for dy = " + dy);
+        //Step 1: rotate the handle about the y 
+        if (dx >= 0.0f)
+        {
+            Quaternion up = Quaternion.AngleAxis(nxt.magnitude, jointNode.up);
+            jointNode.localRotation *= up;
+            Quaternion side = Quaternion.AngleAxis(dy, jointNode.right);
+            jointNode.localRotation *= side;
+        }
+        else if (dx < 0.0f)
+        {
+            Quaternion up = Quaternion.AngleAxis(-nxt.magnitude, jointNode.up);
+            jointNode.localRotation *= up;
+            Quaternion side = Quaternion.AngleAxis(dy, jointNode.right);
+            jointNode.localRotation *= side;
+        }
+
     }
+
+        
 
     public void PushButton(int btn)
     {
