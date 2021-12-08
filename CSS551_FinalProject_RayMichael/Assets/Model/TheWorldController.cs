@@ -5,7 +5,9 @@ using System;
 
 public class TheWorldController : MonoBehaviour
 {
-    public Transform jointNode = null;
+    public Transform jointBaseNode = null;
+    public Transform jointEndNode = null;
+    private Vector3 stickNormal;
     public Transform dropBtnNode = null;
     public Transform resetBtnNode = null;
 
@@ -18,9 +20,12 @@ public class TheWorldController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Assert(jointNode != null);
+        Debug.Assert(jointBaseNode != null);
         Debug.Assert(dropBtnNode != null);
         Debug.Assert(resetBtnNode != null);
+
+        stickNormal = (jointEndNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition() 
+                    - jointBaseNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition()).normalized;
     }
 
     // Update is called once per frame
@@ -47,19 +52,34 @@ public class TheWorldController : MonoBehaviour
         //Step 1: rotate the handle about the y 
         if (dx >= 0.0f)
         {
-            Quaternion up = Quaternion.AngleAxis(nxt.magnitude, jointNode.up);
-            jointNode.localRotation *= up;
-            Quaternion side = Quaternion.AngleAxis(dy, jointNode.right);
-            jointNode.localRotation *= side;
+            Quaternion up = Quaternion.AngleAxis(nxt.magnitude, jointBaseNode.up);
+            jointBaseNode.localRotation *= up;
+            Quaternion side = Quaternion.AngleAxis(dy, jointBaseNode.right);
+            jointBaseNode.localRotation *= side;
         }
         else if (dx < 0.0f)
         {
-            Quaternion up = Quaternion.AngleAxis(-nxt.magnitude, jointNode.up);
-            jointNode.localRotation *= up;
-            Quaternion side = Quaternion.AngleAxis(dy, jointNode.right);
-            jointNode.localRotation *= side;
+            Quaternion up = Quaternion.AngleAxis(-nxt.magnitude, jointBaseNode.up);
+            jointBaseNode.localRotation *= up;
+            Quaternion side = Quaternion.AngleAxis(dy, jointBaseNode.right);
+            jointBaseNode.localRotation *= side;
         }
 
+    }
+
+    public void UpdateJointRotation2(Vector3 prevMousePos, Vector3 currentMousePos) {
+        Vector3 jointNodePos = jointBaseNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition();
+        Vector3 to = prevMousePos - jointNodePos;
+        Vector3 from = currentMousePos - jointNodePos;;
+
+        Debug.Log("joinNodePos: " + jointNodePos);
+        Debug.Log("from: " + from);
+        Debug.Log("to: " + to);
+
+        Quaternion q = Quaternion.FromToRotation(from, to);
+
+        jointBaseNode.up = stickNormal;
+        jointBaseNode.localRotation *= q;
     }
 
         

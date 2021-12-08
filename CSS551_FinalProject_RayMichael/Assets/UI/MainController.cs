@@ -35,7 +35,10 @@ public partial class MainController : MonoBehaviour
     private bool Lift = false;
     private float timer = 0.0f;
 
+    // Controller Handle
     private bool handleSelected = false;
+    private Vector3 prevMousePos;
+    private Vector3 depthBuffer = new Vector3(0, 0, 20);
 
     // Start is called before the first frame update
     void Start()
@@ -86,6 +89,7 @@ public partial class MainController : MonoBehaviour
                 {
                     Debug.Log("You hit the handle!");
                     handleSelected = true;
+                    prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
                 }
                 else if (ComputeDropDetection(hitInfo.point))
                 {
@@ -108,17 +112,23 @@ public partial class MainController : MonoBehaviour
         }
         else if ((handleSelected) && (Input.GetMouseButton(0))){
             //Step4: Compute the delta position change for the mouse using the initial and nextPosition
-            float dx = mousPosX - Input.mousePosition.x;
-            mousPosX = Input.mousePosition.x;
+            // float dx = mousPosX - Input.mousePosition.x;
+            // mousPosX = Input.mousePosition.x;
 
-            float dy = mousPosY - Input.mousePosition.y;
-            mousPosY = Input.mousePosition.y;
+            // float dy = mousPosY - Input.mousePosition.y;
+            // mousPosY = Input.mousePosition.y;
 
-            dx = dx * kPixelToDegree;
-            dy = dy * kPixelToDegree;            
-            mModel3.UpdateJointRotation(dx, dy);
+            // dx = dx * kPixelToDegree;
+            // dy = dy * kPixelToDegree;            
+            // mModel3.UpdateJointRotation(dx, dy);
 
+            DragHandle();
         }
+    }
+
+    private void DragHandle() {         
+        Vector3 currentMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
+        mModel3.UpdateJointRotation2(prevMousePos, currentMousePos);
     }
 
     private bool ComputeHandleDetection(Vector3 pos2)
@@ -268,7 +278,6 @@ public partial class MainController : MonoBehaviour
         
         //Vector3 pos = new Vector3();
        //pos.y = clawPos.y;
-       Debug.Log(mModel.clawActionFlag);
         if (clawPos.y > 1.5f)
         {
             Vector3 pos = new Vector3();

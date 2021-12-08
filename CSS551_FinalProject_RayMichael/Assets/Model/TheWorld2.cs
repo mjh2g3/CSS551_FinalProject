@@ -70,7 +70,7 @@ public class TheWorld2 : MonoBehaviour
     {
         //Define the start and end point of the axis beam
         Vector3 startPoint = clawPos.transform.localPosition;
-        Debug.Log(startPoint);
+        // Debug.Log(startPoint);
         Vector3 endPoint = clawPos.transform.localPosition + clawPos.transform.up * sightMagnitude;
 
         //Find the vector v between end point of axis direction beam
