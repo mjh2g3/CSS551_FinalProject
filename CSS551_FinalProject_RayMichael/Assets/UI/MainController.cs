@@ -7,6 +7,7 @@ public partial class MainController : MonoBehaviour
     public Camera mainCamera = null;
     public TheWorld mModel = null;
     public TheWorld2 mModel2 = null;
+    public TheWorldController mModel3 = null;
 
     private GameObject mSelected;
     private Vector3 clawPos = new Vector3(0.0f, 4f, 0.0f);
@@ -85,10 +86,12 @@ public partial class MainController : MonoBehaviour
                     Debug.Log("You hit the drop button!");
                     Drop = true;
                     mModel.clawActionFlag = "drop";
+                    mModel3.PushButton(0);
                 }
                 else if (ComputeResetDetection(hitInfo.point))
                 {
                     Debug.Log("You hit the reset button!");
+                    mModel3.PushButton(1);
                     ResetClaw();
                 }
             }
@@ -288,7 +291,7 @@ public partial class MainController : MonoBehaviour
     {
         //Reset the claw to original position
         Vector3 orig = new Vector3();
-        orig.y = 3.5f;
+        orig.y = 4.0f;
         orig.x = 0.0f;
         orig.z = 0.0f;
         clawPos = mModel2.UpdateClawPosition(orig);
