@@ -129,8 +129,15 @@ public partial class MainController : MonoBehaviour
             mousPosY = Input.mousePosition.y;
 
             dx = dx * kPixelToDegree;
-            dy = dy * kPixelToDegree;            
-            mModel3.UpdateJointRotation(p0, p1, kPixelToDegree);
+            dy = dy * kPixelToDegree;
+
+            Ray r = mainCamera.ScreenPointToRay(Input.mousePosition);
+            Debug.Log("Ray point at 100 units away: " + r.GetPoint(100.0f));
+            Debug.Log("Ray point origin: " + r.origin);
+            Vector3 p2 = r.GetPoint(100.0f) - r.origin;
+
+            Vector3 initPos = handle.GetLocalPosition();
+            mModel3.UpdateJointRotation(p2, initPos);
 
             //DragHandle();
         }

@@ -44,8 +44,31 @@ public class TheWorldController : MonoBehaviour
     }
 
     //public void UpdateJointRotation(float dx, float dy)
-    public void UpdateJointRotation(Vector2 p0, Vector2 p1, float kPixelToDegree)
+    //public void UpdateJointRotation(Vector2 p0, Vector2 p1, float kPixelToDegree)
+    public Vector3 UpdateJointRotation(Vector3 p2, Vector3 pHandle)
     {
+        Vector3 v = p2 - jointBaseNode.localPosition;
+        float vMagnitude = v.magnitude;
+        v /= vMagnitude;
+
+        Vector3 vHandle = pHandle - jointBaseNode.localPosition;
+        float d = Vector3.Dot(vHandle, v);
+
+        Vector3 vNextEnd = jointBaseNode.localPosition + v * d;
+        Debug.Log("vNextEnd point = " + vNextEnd);
+        Vector3 vNext = vNextEnd - jointBaseNode.localPosition;
+        Debug.Log("joint node pos  " + jointBaseNode.localPosition);
+        jointBaseNode.rotation = Quaternion.FromToRotation(vHandle, vNext);
+
+
+
+        return vNext;//
+        
+        
+        
+        
+        /*
+        
         float degrees = 0.0f;
         if (((p1 - p0) / (p1 - p0).magnitude) != mDir2)
         {
@@ -88,7 +111,7 @@ public class TheWorldController : MonoBehaviour
             }
         }
 
-        
+        */
 
         /*
         //Step 1: Get current forward direction vector v0
