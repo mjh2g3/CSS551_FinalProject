@@ -17,6 +17,8 @@ public class TheWorldController : MonoBehaviour
     private bool buttonPressUp = false;
     private bool joystickMove = false;
 
+    private Vector2 mDir2 = Vector2.up;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -41,8 +43,89 @@ public class TheWorldController : MonoBehaviour
         }
     }
 
-    public void UpdateJointRotation(float dx, float dy)
+    //public void UpdateJointRotation(float dx, float dy)
+    public void UpdateJointRotation(Vector2 p0, Vector2 p1, float kPixelToDegree)
     {
+        float degrees = 0.0f;
+        if (((p1 - p0) / (p1 - p0).magnitude) != mDir2)
+        {
+            Debug.Log("The direction is new");
+            jointBaseNode.localRotation *= Quaternion.identity;
+
+            //Step 1: Get current forward direction vector v0
+            Vector2 p0a = p0;
+            Vector2 p0b = p0 + mDir2 * 2.0f;
+            Vector2 v0 = p0b - p0a;
+
+            //Step2: Get next forward direction vector v1
+            Vector2 v1 = p1 - p0;
+
+            //Step3: Find the angle between the two vectors
+            float dot = Vector2.Dot(v0, v1);
+            float mag0 = v0.magnitude;
+            float mag1 = (p1 - p0).magnitude;
+            //angle is in radians
+            double angle = Math.Acos((double)dot / (mag1 * mag0));
+            //convert to degrees
+            degrees = (float)((180 / Math.PI) * angle);
+            Debug.Log(degrees);
+            //Step4: Use angle, degrees, for rotation about the y axis to adjust forward z direction
+            if (!Double.IsNaN(degrees))
+            {
+                Quaternion rotateOnY = Quaternion.AngleAxis(degrees, jointBaseNode.up);
+                jointBaseNode.localRotation *= rotateOnY;
+
+            }
+
+            //Step5: Reset the mDir2 to the new direction
+            mDir2 = (p1 - p0) / mag1;
+
+            if (!Double.IsNaN(degrees))
+            {
+                Quaternion rotateOnX = Quaternion.AngleAxis(degrees, jointBaseNode.right);
+                jointBaseNode.localRotation = rotateOnX;
+
+            }
+        }
+
+        
+
+        /*
+        //Step 1: Get current forward direction vector v0
+        Vector2 p0a = p0;
+        Vector2 p0b = p0 + mDir2 * 2.0f;
+        Vector2 v0 = p0b - p0a;
+
+        //Step2: Get next forward direction vector v1
+        Vector2 v1 = p1 - p0;
+
+        //Step3: Find the angle between the two vectors
+        float dot = Vector2.Dot(v1, v0);
+        float mag0 = v0.magnitude;
+        float mag1 = (p1 - p0).magnitude;
+        //angle is in radians
+        double angle = Math.Acos((double)dot / (mag0 * mag1));
+        //convert to degrees
+        float degrees = (float) ( (180 / Math.PI) * angle);
+        Debug.Log(degrees);
+        //Step4: Use angle, degrees, for rotation about the y axis to adjust forward z direction
+        if (!Double.IsNaN(degrees))
+        {
+            Quaternion rotateOnY = Quaternion.AngleAxis(degrees, jointBaseNode.up);
+            jointBaseNode.localRotation *= rotateOnY;
+
+        }
+
+        //Step5: Reset the mDir2 to the new direction
+        mDir2 = (p1 - p0) / mag1;
+        */
+
+
+        //Step6: Rotate the handle by the magnitude onto the x axis
+        // Quaternion rotateOnX = Quaternion.AngleAxis(degrees, jointBaseNode.right);
+        // jointBaseNode.localRotation *= rotateOnX;
+
+        /*
         //Up vector
         Vector2 up2 = Vector2.up;
         Vector2 nxt = new Vector2(dx, dy);
@@ -64,7 +147,7 @@ public class TheWorldController : MonoBehaviour
             Quaternion side = Quaternion.AngleAxis(dy, jointBaseNode.right);
             jointBaseNode.localRotation *= side;
         }
-
+        */
     }
 
     public void UpdateJointRotation2(Vector3 prevMousePos, Vector3 currentMousePos) {
