@@ -58,9 +58,10 @@ public class TheWorldController : MonoBehaviour
         Debug.Log("vNextEnd point = " + vNextEnd);
         Vector3 vNext = vNextEnd - jointBaseNode.localPosition;
         Debug.Log("joint node pos  " + jointBaseNode.localPosition);
-        jointBaseNode.rotation = Quaternion.FromToRotation(vHandle, vNext);
 
 
+        //jointBaseNode.rotation = Quaternion.FromToRotation(vHandle, vNextEnd);
+        jointBaseNode.rotation = Quaternion.FromToRotation(vNextEnd, vHandle);
 
         return vNext;//
         
