@@ -112,17 +112,34 @@ public partial class MainController : MonoBehaviour
         }
         else if ((handleSelected) && (Input.GetMouseButton(0))){
             //Step4: Compute the delta position change for the mouse using the initial and nextPosition
-            // float dx = mousPosX - Input.mousePosition.x;
-            // mousPosX = Input.mousePosition.x;
+            /* 
+            float dx = mousPosX - Input.mousePosition.x;
+             mousPosX = Input.mousePosition.x;
 
-            // float dy = mousPosY - Input.mousePosition.y;
-            // mousPosY = Input.mousePosition.y;
+             float dy = mousPosY - Input.mousePosition.y;
+             mousPosY = Input.mousePosition.y;
+            */
+            Vector2 p0 = new Vector2(mousPosX, mousPosY);
+            Vector2 p1 = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 
-            // dx = dx * kPixelToDegree;
-            // dy = dy * kPixelToDegree;            
-            // mModel3.UpdateJointRotation(dx, dy);
+            float dx = mousPosX - Input.mousePosition.x;
+            float dy = mousPosY - Input.mousePosition.y;
 
-            DragHandle();
+            mousPosX = Input.mousePosition.x;
+            mousPosY = Input.mousePosition.y;
+
+            dx = dx * kPixelToDegree;
+            dy = dy * kPixelToDegree;
+
+            Ray r = mainCamera.ScreenPointToRay(Input.mousePosition);
+            Debug.Log("Ray point at 100 units away: " + r.GetPoint(100.0f));
+            Debug.Log("Ray point origin: " + r.origin);
+            Vector3 p2 = r.GetPoint(100.0f) - r.origin;
+
+            Vector3 initPos = handle.GetLocalPosition();
+            mModel3.UpdateJointRotation(p2, initPos);
+
+            //DragHandle();
         }
     }
 
