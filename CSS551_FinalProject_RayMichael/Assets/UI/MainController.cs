@@ -56,6 +56,8 @@ public partial class MainController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Turning off for vr
+        /*
         CraneMovement();
         CamManipulation();
         LMB();
@@ -69,6 +71,7 @@ public partial class MainController : MonoBehaviour
         }
 
         ClawMovement();
+        */
     }
 
     private void LMB()
