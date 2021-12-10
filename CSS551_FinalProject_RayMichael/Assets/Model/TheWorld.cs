@@ -3,22 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class TheWorld : MonoBehaviour
+public partial class TheWorld : MonoBehaviour
 {
     public SceneNode TheClawRoot;
     public SceneNode TheControllerRoot;
     public Transform mSelected;
 
     //Crane Controller Variables
-    private bool TrackHandle = false;
-
-
+    //private bool TrackHandle = false;
 
     // claw related variables
     public Transform clawBase;
     public List<Transform> clawNodes;
     public string clawActionFlag;
     private float rotateSpeed, moveSpeed;
+
+
+    //Coming from World2----------------------------------------------------------------
+    public Transform clawPos = null;
+    
+    private float grabThreshold = 2f;
+    private Transform mGrabbed = null;
+
+    public MyMeshNxM upperBox = null;
+    public MyMeshNxM lowerBox = null;
+
+    private GameObject sightLine;
+    private float sightMagnitude = 3.0f;
+    public Camera clawCam = null;
+    public List<Transform> prizes;
+
+    //Coming from WorldController--------------------------------------------------------
+    public Transform jointBaseNode = null;
+    public Transform jointEndNode = null;
+    private Vector3 stickNormal;
+    public Transform dropBtnNode = null;
+    public Transform resetBtnNode = null;
+
+    private Transform btnSelected;
+    private float speed = 0.05f;
+    private bool buttonPressDown = false;
+    private bool buttonPressUp = false;
+    //private bool joystickMove = false;
+
+    private Vector2 mDir2 = Vector2.up;
 
     // Start is called before the first frame update
     void Start()
@@ -37,6 +65,31 @@ public class TheWorld : MonoBehaviour
         moveSpeed = 1/360f;
 
         clawActionFlag = "standby";
+
+
+
+        //Coming from previous world2------------------------------------------------------------------------
+        Debug.Assert(clawPos != null);
+        Debug.Assert(upperBox != null);
+        Debug.Assert(lowerBox != null);
+        Debug.Assert(clawCam != null);
+
+        upperBox.SetHeight(3.5f);
+
+        //The following is to create a line of sight; future to remove and have light source
+        sightLine = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        Vector3 scale = new Vector3(0.05f, sightMagnitude / 2, 0.05f);
+        sightLine.transform.localScale = scale;
+        sightLine.transform.up = clawPos.transform.up;
+
+        //Coming from WorldController-------------------------------------------------------------------------
+        Debug.Assert(jointBaseNode != null);
+        Debug.Assert(dropBtnNode != null);
+        Debug.Assert(resetBtnNode != null);
+
+        stickNormal = (jointEndNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition()
+                    - jointBaseNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition()).normalized;
+
     }
 
     // Update is called once per frame
@@ -53,6 +106,19 @@ public class TheWorld : MonoBehaviour
 
        
         UpdateClawAnimations();
+        UpdateLineOfSight();
+        UpdateClawCam();
+
+        //Coming from worldcontroller----------------------------------------------
+        if (buttonPressDown)
+        {
+            ButtonLower();
+        }
+        if (buttonPressUp)
+        {
+            ButtonRise();
+        }
+
     }
 
     public void SetSelected(Transform selected)

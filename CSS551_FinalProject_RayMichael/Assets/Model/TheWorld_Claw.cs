@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TheWorld2 : MonoBehaviour
+public partial class TheWorld : MonoBehaviour
 {
+    /*
     public Transform clawPos = null;
-    public Transform clawBase = null;
+    
     private float grabThreshold = 2f;
     private Transform mGrabbed = null;
 
@@ -16,31 +17,9 @@ public class TheWorld2 : MonoBehaviour
     private float sightMagnitude = 3.0f;
     public Camera clawCam = null;
     public List<Transform> prizes;
+    */
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Debug.Assert(clawPos != null);
-        Debug.Assert(upperBox != null);
-        Debug.Assert(lowerBox != null);
-        Debug.Assert(clawCam != null);
-
-        upperBox.SetHeight(3.5f);
-
-        //The following is to create a line of sight; future to remove and have light source
-        sightLine = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        Vector3 scale = new Vector3(0.05f, sightMagnitude / 2, 0.05f);
-        sightLine.transform.localScale = scale;
-        sightLine.transform.up = clawPos.transform.up;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        UpdateLineOfSight();
-        UpdateClawCam();
-    }
-
+    
     public Vector3 UpdateClawPosition(Vector3 pos)
     {
         Vector3 curPos = clawPos.localPosition;
