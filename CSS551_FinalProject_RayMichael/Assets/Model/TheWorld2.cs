@@ -28,16 +28,16 @@ public class TheWorld2 : MonoBehaviour
         upperBox.SetHeight(3.5f);
 
         //The following is to create a line of sight; future to remove and have light source
-        sightLine = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
-        Vector3 scale = new Vector3(0.05f, sightMagnitude / 2, 0.05f);
-        sightLine.transform.localScale = scale;
-        sightLine.transform.up = clawPos.transform.up;
+        // sightLine = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+        // Vector3 scale = new Vector3(0.05f, sightMagnitude / 2, 0.05f);
+        // sightLine.transform.localScale = scale;
+        // sightLine.transform.up = clawPos.transform.up;
     }
 
     // Update is called once per frame
     void Update()
     {
-        UpdateLineOfSight();
+        // UpdateLineOfSight();
         UpdateClawCam();
     }
 
