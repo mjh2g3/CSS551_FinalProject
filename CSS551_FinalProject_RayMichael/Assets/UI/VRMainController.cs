@@ -3,21 +3,27 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class VRMainController : MonoBehaviour
+public partial class VRMainController : MonoBehaviour
 {
+    //public TheWorld mModel = null;
+    public VRTheWorld mModel = null;
     //MotionControllerVariables
     public Transform LeftHand;
     public Transform RightHand;
     private InputDevice leftController;
     private InputDevice rightController;
 
-    private bool leftTrigger = false;
-    private bool rightTrigger = false;
+    //private bool leftTrigger = false;
+    //private bool rightTrigger = false;
     
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Assert(mModel != null);
         
+        Debug.Assert(handle != null);
+        Debug.Assert(dropBtn != null);
+        Debug.Assert(resetBtn != null);
     }
 
     // Update is called once per frame
@@ -29,8 +35,23 @@ public class VRMainController : MonoBehaviour
         }
         else
         {
-            //
+            //CraneMovement();
+            //CamManipulation();
+            //LMB(); Replace with LeftHand and RightHand MotionControllerButtons (LMCB, RMCB)
+            LMCB();
+            RMCB();
+            if (Drop)
+            {
+                DropClaw();
+            }
+            if (Lift)
+            {
+                LiftClaw();
+            }
+
+            //ClawMovement();
         }
+
     }
 
     private void InitDevices()
@@ -61,4 +82,69 @@ public class VRMainController : MonoBehaviour
 
         rightController = rightControlDevices[0];
     }
+
+    private void LMCB()
+    {
+        leftController.TryGetFeatureValue(CommonUsages.trigger, out float triggerValue);
+        if (triggerValue > 0.1f)
+        {
+            Debug.Log("Left trigger pressed");
+            RaycastHit hitInfo = new RaycastHit();
+            bool hit = Physics.Raycast(LeftHand.position, LeftHand.forward, out hitInfo, Mathf.Infinity);
+            if (hit)
+            {
+                if (ComputeHandleDetection(LeftHand.position, hitInfo.point))
+                {
+                    handleSelected = true;
+                    //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
+                }
+                else if (ComputeDropDetection(LeftHand.position, hitInfo.point))
+                {
+                    Drop = true;
+                    mModel.clawActionFlag = "drop";
+                    mModel.PushButton(0);
+                }
+                else if (ComputeResetDetection(LeftHand.position, hitInfo.point))
+                {
+                    Debug.Log("You hit the reset button!");
+                    mModel.PushButton(1);
+                    ResetClaw();
+                }
+            }
+        }
+
+    }  
+
+    private void RMCB()
+    {
+        rightController.TryGetFeatureValue(CommonUsages.trigger, out float triggerValue);
+        if (triggerValue > 0.1f)
+        {
+            Debug.Log("Right trigger pressed");
+
+            RaycastHit hitInfo = new RaycastHit();
+            bool hit = Physics.Raycast(RightHand.position, RightHand.forward, out hitInfo, Mathf.Infinity);
+            if (hit)
+            {
+                if (ComputeHandleDetection(RightHand.position, hitInfo.point))
+                {
+                    //handleSelected = true;
+                    //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
+                }
+                else if (ComputeDropDetection(RightHand.position, hitInfo.point))
+                {
+                    Drop = true;
+                    mModel.clawActionFlag = "drop";
+                    mModel.PushButton(0);
+                }
+                else if (ComputeResetDetection(RightHand.position, hitInfo.point))
+                {
+                    Debug.Log("You hit the reset button!");
+                    mModel.PushButton(1);
+                    ResetClaw();
+                }
+            }
+        }
+    }
+
 }
