@@ -25,9 +25,6 @@ public partial class TheWorld : MonoBehaviour
     private float grabThreshold = 2f;
     private Transform mGrabbed = null;
 
-    public MyMeshNxM upperBox = null;
-    public MyMeshNxM lowerBox = null;
-
     private GameObject sightLine;
     private float sightMagnitude = 3.0f;
     public Camera clawCam = null;
@@ -70,11 +67,10 @@ public partial class TheWorld : MonoBehaviour
 
         //Coming from previous world2------------------------------------------------------------------------
         Debug.Assert(clawPos != null);
-        Debug.Assert(upperBox != null);
-        Debug.Assert(lowerBox != null);
+        
         Debug.Assert(clawCam != null);
 
-        upperBox.SetHeight(3.5f);
+        
 
         //The following is to create a line of sight; future to remove and have light source
         // sightLine = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
