@@ -7,6 +7,7 @@ public partial class VRTheWorld : MonoBehaviour
 {
     public SceneNode TheClawRoot;
     public SceneNode TheControllerRoot;
+    public Transform player;
     
     // Start is called before the first frame update
     void Start()
@@ -14,7 +15,7 @@ public partial class VRTheWorld : MonoBehaviour
         Debug.Assert(TheClawRoot != null);
         Debug.Assert(TheControllerRoot != null);
 
-        rotateSpeed = 1 / 30f;
+        rotateSpeed = 1 / 3f;
         moveSpeed = 1 / 360f;
 
         clawActionFlag = "standby";
@@ -50,5 +51,12 @@ public partial class VRTheWorld : MonoBehaviour
         {
             ButtonRise();
         }
+
+        // change origin of the controller to an offset away from the camera
+        TheControllerRoot.NodeOrigin = player.position + new Vector3(0, 2, -2);
+    }
+
+    public void MovePlayer(float x, float z) {
+        player.position += new Vector3 (x, 0, z) / 20f;
     }
 }

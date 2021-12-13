@@ -11,7 +11,7 @@ public partial class VRTheWorld : MonoBehaviour
     public Transform resetBtnNode = null;
 
     private Transform btnSelected;
-    private float speed = 0.05f;
+    private float speed = 1f;
     private bool buttonPressDown = false;
     private bool buttonPressUp = false;
     //private bool joystickMove = false;

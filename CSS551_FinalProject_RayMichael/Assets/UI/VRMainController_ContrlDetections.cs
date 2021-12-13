@@ -17,7 +17,7 @@ public partial class VRMainController : MonoBehaviour
     private bool Lift = false;
     private float timer = 0.0f;
 
-    private bool ComputeHandleDetection(Vector3 pos1, Vector3 pos2)
+    private bool ComputeHandleDetectionRayCast(Vector3 pos1, Vector3 pos2)
     {
         bool hit = false;
         //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
@@ -43,7 +43,27 @@ public partial class VRMainController : MonoBehaviour
         return hit;
     }
 
-    private bool ComputeDropDetection(Vector3 pos1, Vector3 pos2)
+    private bool ComputeHandleDetection(Vector3 pos1)
+    {
+        bool hit = false;
+        Vector3 X = handle.GetLocalPosition() - pos1;
+
+        Vector3 scaleHandle = handle.GetLocalScale();
+        float r = scaleHandle.x * 0.5f;
+
+        float d;
+
+        d = X.magnitude;
+        if (d < r)
+        {
+            hit = true;
+        }
+
+        return hit;
+    }
+
+
+    private bool ComputeDropDetectionRayCast(Vector3 pos1, Vector3 pos2)
     {
         bool hit = false;
         //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
@@ -55,8 +75,8 @@ public partial class VRMainController : MonoBehaviour
         Vector3 X = dropBtn.GetLocalPosition() - pos1;
         float h = Vector3.Dot(X, V);
 
-        Vector3 scaleHandle = dropBtn.GetLocalScale();
-        float r = scaleHandle.x * 0.5f;
+        Vector3 scaleBtn = dropBtn.GetLocalScale();
+        float r = scaleBtn.x * 0.5f;
 
         float d;
 
@@ -69,7 +89,28 @@ public partial class VRMainController : MonoBehaviour
         return hit;
     }
 
-    private bool ComputeResetDetection(Vector3 pos1, Vector3 pos2)
+    private bool ComputeDropDetection(Vector3 pos1)
+    {
+        bool hit = false;
+        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
+        
+        Vector3 X = dropBtn.GetLocalPosition() - pos1;
+
+        Vector3 scaleBtn = dropBtn.GetLocalScale();
+        float r = scaleBtn.y * 0.5f;
+
+        float d;
+
+        d = X.magnitude;
+        if (d < r)
+        {
+            hit = true;
+        }
+
+        return hit;
+    }
+
+    private bool ComputeResetDetectionRayCast(Vector3 pos1, Vector3 pos2)
     {
         bool hit = false;
         //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
@@ -81,8 +122,8 @@ public partial class VRMainController : MonoBehaviour
         Vector3 X = resetBtn.GetLocalPosition() - pos1;
         float h = Vector3.Dot(X, V);
 
-        Vector3 scaleHandle = resetBtn.GetLocalScale();
-        float r = scaleHandle.x * 0.5f;
+        Vector3 scaleBtn = resetBtn.GetLocalScale();
+        float r = scaleBtn.x * 0.5f;
 
         float d;
 
@@ -91,6 +132,27 @@ public partial class VRMainController : MonoBehaviour
         {
             hit = true;
         }
+        return hit;
+    }
+
+    private bool ComputeResetDetection(Vector3 pos1)
+    {
+        bool hit = false;
+        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
+        
+        Vector3 X = resetBtn.GetLocalPosition() - pos1;
+
+        Vector3 scaleBtn = resetBtn.GetLocalScale();
+        float r = scaleBtn.x * 0.5f;
+
+        float d;
+
+        d = X.magnitude;
+        if (d < r)
+        {
+            hit = true;
+        }
+
         return hit;
     }
 }
