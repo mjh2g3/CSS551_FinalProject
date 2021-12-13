@@ -108,7 +108,7 @@ public partial class VRMainController : MonoBehaviour
             clawPos.y += pos.y;
             // Debug.Log(clawPos);
             clawPos = mModel.UpdateClawPosition(clawPos);
-            Debug.Log("Dropping the claw");
+            // Debug.Log("Dropping the claw");
         }
         else if (mModel.clawActionFlag == "drop")
         {
@@ -131,7 +131,7 @@ public partial class VRMainController : MonoBehaviour
             clawPos.y += pos.y;
             // Debug.Log(clawPos);
             clawPos = mModel.UpdateClawPosition(clawPos);
-            Debug.Log("Lifting the claw");
+            // Debug.Log("Lifting the claw");
         }
         else
         {

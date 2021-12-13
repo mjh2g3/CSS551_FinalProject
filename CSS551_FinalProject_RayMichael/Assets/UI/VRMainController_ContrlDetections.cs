@@ -13,6 +13,7 @@ public partial class VRMainController : MonoBehaviour
     public NodePrimitive handle;
     public NodePrimitive dropBtn;
     public NodePrimitive resetBtn;
+    private string pressedButton;
     private bool Drop = false;
     private bool Lift = false;
     private float timer = 0.0f;
@@ -92,17 +93,18 @@ public partial class VRMainController : MonoBehaviour
     private bool ComputeDropDetection(Vector3 pos1)
     {
         bool hit = false;
-        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
-        
+        // Debug.Log("dropBtn: " + dropBtn.GetLocalPosition());
+        // Debug.Log("pos1: " + pos1);
+
         Vector3 X = dropBtn.GetLocalPosition() - pos1;
 
         Vector3 scaleBtn = dropBtn.GetLocalScale();
         float r = scaleBtn.y * 0.5f;
 
-        float d;
+        float d = X.magnitude;
+        Debug.Log("d dropBtn: " + d);
 
-        d = X.magnitude;
-        if (d < r)
+        if (d < 1)
         {
             hit = true;
         }
@@ -138,7 +140,6 @@ public partial class VRMainController : MonoBehaviour
     private bool ComputeResetDetection(Vector3 pos1)
     {
         bool hit = false;
-        //Step 1: Compute the vector between the camera position (pos1) and hit position (pos2)
         
         Vector3 X = resetBtn.GetLocalPosition() - pos1;
 
@@ -146,13 +147,35 @@ public partial class VRMainController : MonoBehaviour
         float r = scaleBtn.x * 0.5f;
 
         float d;
-
         d = X.magnitude;
-        if (d < r)
+
+        Debug.Log("d resetBtn: " + d);
+        if (d < 1)
         {
             hit = true;
         }
 
         return hit;
+    }
+
+    private void ClosestButton(Vector3 pos1) 
+    {
+        float dropBtnDist, resetBtnDist;
+        dropBtnDist = (dropBtn.GetLocalPosition() - pos1).sqrMagnitude;
+        resetBtnDist = (resetBtn.GetLocalPosition() - pos1).sqrMagnitude;
+        // Debug.Log("dropBtnDist: " + dropBtnDist);
+        // Debug.Log("resetBtnDist: " + resetBtnDist);
+        if (dropBtnDist < resetBtnDist) 
+        {
+            Drop = true;
+            mModel.clawActionFlag = "drop";
+            mModel.PushButton(0);
+        } 
+        else 
+        {
+            Debug.Log("You hit the reset button!");
+            mModel.PushButton(1);
+            ResetClaw(); 
+        }
     }
 }

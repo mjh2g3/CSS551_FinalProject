@@ -90,44 +90,42 @@ public partial class VRMainController : MonoBehaviour
         if (triggerValue > 0.1f)
         {
             Debug.Log("Left trigger pressed");
-            RaycastHit hitInfo = new RaycastHit();
-            bool hit = Physics.Raycast(LeftHand.position, LeftHand.forward, out hitInfo, Mathf.Infinity);
-            if (hit)
-            {
-                if (ComputeHandleDetectionRayCast(LeftHand.position, hitInfo.point))
-                {
-                    handleSelected = true;
-                    //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
-                }
-                else if (ComputeDropDetectionRayCast(LeftHand.position, hitInfo.point))
-                {
-                    Drop = true;
-                    mModel.clawActionFlag = "drop";
-                    mModel.PushButton(0);
-                }
-                else if (ComputeResetDetectionRayCast(LeftHand.position, hitInfo.point))
-                {
-                    mModel.PushButton(1);
-                    ResetClaw();
-                }
-            }
+            // RaycastHit hitInfo = new RaycastHit();
+            // bool hit = Physics.Raycast(LeftHand.position, LeftHand.forward, out hitInfo, Mathf.Infinity);
+            // if (hit)
+            // {
+            //     if (ComputeHandleDetectionRayCast(LeftHand.position, hitInfo.point))
+            //     {
+            //         handleSelected = true;
+            //         //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
+            //     }
+            //     else if (ComputeDropDetectionRayCast(LeftHand.position, hitInfo.point))
+            //     {
+            //         Drop = true;
+            //         mModel.clawActionFlag = "drop";
+            //         mModel.PushButton(0);
+            //     }
+            //     else if (ComputeResetDetectionRayCast(LeftHand.position, hitInfo.point))
+            //     {
+            //         mModel.PushButton(1);
+            //         ResetClaw();
+            //     }
+            // }
 
-            if (ComputeHandleDetection(LeftHand.position))
+            
+            bool HandleOperation, DropBtnOperation, ResetBtnOperation;
+            HandleOperation = ComputeHandleDetection(LeftHand.position);
+            DropBtnOperation = ComputeDropDetection(LeftHand.position);
+            ResetBtnOperation = ComputeResetDetection(LeftHand.position);
+            if (HandleOperation)
             {
                 handleSelected = true;
                 //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
             } 
-            else if (ComputeDropDetection(LeftHand.position))
+            else if (DropBtnOperation && ResetBtnOperation) 
             {
-                Drop = true;
-                mModel.clawActionFlag = "drop";
-                mModel.PushButton(0);
-            }
-            else if (ComputeResetDetection(LeftHand.position))
-            {
-                Debug.Log("You hit the reset button!");
-                mModel.PushButton(1);
-                ResetClaw();    
+                Debug.Log("closest button pressed");
+                ClosestButton(LeftHand.position);
             }
         }
 
