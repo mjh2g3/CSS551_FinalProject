@@ -14,8 +14,8 @@ public class CameraSwitchAndManip : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log(mainCam != null);
-        Debug.Log(craneCam != null);
+        Debug.Assert(mainCam != null);
+        Debug.Assert(craneCam != null);
 
         mainCam.enabled = true;
         craneCam.enabled = false;

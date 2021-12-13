@@ -11,7 +11,7 @@ public partial class VRTheWorld : MonoBehaviour
     public Transform resetBtnNode = null;
 
     private Transform btnSelected;
-    private float speed = 1f;
+    private float speed = 0.25f;
     private bool buttonPressDown = false;
     private bool buttonPressUp = false;
     //private bool joystickMove = false;
@@ -82,6 +82,7 @@ public partial class VRTheWorld : MonoBehaviour
             pos.y = pos.y + (speed) * -1.0f * Time.deltaTime;
             btnPos.y += pos.y;
             btnSelected.localPosition = btnPos;
+           
         }
         else
         {
@@ -94,12 +95,13 @@ public partial class VRTheWorld : MonoBehaviour
     private Vector3 ButtonRise()
     {
         Vector3 btnPos = btnSelected.localPosition;
-        if ((btnPos.y > -0.11f) && (btnPos.y < 0.0f))
+        if ((btnPos.y > -0.12f) && (btnPos.y < 0.0f))
         {
             Vector3 pos = new Vector3();
             pos.y = pos.y + (speed) * 1.0f * Time.deltaTime;
             btnPos.y += pos.y;
             btnSelected.localPosition = btnPos;
+
         }
         else
         {
