@@ -135,20 +135,23 @@ public partial class VRMainController : MonoBehaviour
         }
         else
         {
+            mModel.clawActionFlag = "standby";
             Lift = false;
         }
     }
 
     private void ResetClaw()
     {
-        //Reset the claw to original position
-        Vector3 orig = new Vector3();
-        orig.y = 4.0f;
-        orig.x = 0.0f;
-        orig.z = 0.0f;
-        clawPos = mModel.UpdateClawPosition(orig);
+        if (mModel.clawActionFlag == "standby") {
+            //Reset the claw to original position
+            Vector3 orig = new Vector3();
+            orig.y = 4.0f;
+            orig.x = 0.0f;
+            orig.z = 0.0f;
+            clawPos = mModel.UpdateClawPosition(orig);
 
-        Drop = false;
+            Drop = false;
+        }
     }
 
 }

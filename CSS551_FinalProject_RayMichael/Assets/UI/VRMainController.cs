@@ -40,6 +40,7 @@ public partial class VRMainController : MonoBehaviour
             //LMB(); Replace with LeftHand and RightHand MotionControllerButtons (LMCB, RMCB)
             LMCB();
             RMCB();
+            PlayerMovement();
             if (Drop)
             {
                 DropClaw();
@@ -93,23 +94,40 @@ public partial class VRMainController : MonoBehaviour
             bool hit = Physics.Raycast(LeftHand.position, LeftHand.forward, out hitInfo, Mathf.Infinity);
             if (hit)
             {
-                if (ComputeHandleDetection(LeftHand.position, hitInfo.point))
+                if (ComputeHandleDetectionRayCast(LeftHand.position, hitInfo.point))
                 {
                     handleSelected = true;
                     //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
                 }
-                else if (ComputeDropDetection(LeftHand.position, hitInfo.point))
+                else if (ComputeDropDetectionRayCast(LeftHand.position, hitInfo.point))
                 {
                     Drop = true;
                     mModel.clawActionFlag = "drop";
                     mModel.PushButton(0);
                 }
-                else if (ComputeResetDetection(LeftHand.position, hitInfo.point))
+                else if (ComputeResetDetectionRayCast(LeftHand.position, hitInfo.point))
                 {
-                    Debug.Log("You hit the reset button!");
                     mModel.PushButton(1);
                     ResetClaw();
                 }
+            }
+
+            if (ComputeHandleDetection(LeftHand.position))
+            {
+                handleSelected = true;
+                //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
+            } 
+            else if (ComputeDropDetection(LeftHand.position))
+            {
+                Drop = true;
+                mModel.clawActionFlag = "drop";
+                mModel.PushButton(0);
+            }
+            else if (ComputeResetDetection(LeftHand.position))
+            {
+                Debug.Log("You hit the reset button!");
+                mModel.PushButton(1);
+                ResetClaw();    
             }
         }
 
@@ -126,18 +144,18 @@ public partial class VRMainController : MonoBehaviour
             bool hit = Physics.Raycast(RightHand.position, RightHand.forward, out hitInfo, Mathf.Infinity);
             if (hit)
             {
-                if (ComputeHandleDetection(RightHand.position, hitInfo.point))
+                if (ComputeHandleDetectionRayCast(RightHand.position, hitInfo.point))
                 {
                     //handleSelected = true;
                     //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
                 }
-                else if (ComputeDropDetection(RightHand.position, hitInfo.point))
+                else if (ComputeDropDetectionRayCast(RightHand.position, hitInfo.point))
                 {
                     Drop = true;
                     mModel.clawActionFlag = "drop";
                     mModel.PushButton(0);
                 }
-                else if (ComputeResetDetection(RightHand.position, hitInfo.point))
+                else if (ComputeResetDetectionRayCast(RightHand.position, hitInfo.point))
                 {
                     Debug.Log("You hit the reset button!");
                     mModel.PushButton(1);
@@ -145,6 +163,11 @@ public partial class VRMainController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void PlayerMovement() {
+        bool touchpad = leftController.TryGetFeatureValue(CommonUsages.secondary2DAxis, out Vector2 touchpadValue);
+        mModel.MovePlayer(touchpadValue.x, touchpadValue.y);
     }
 
 }
