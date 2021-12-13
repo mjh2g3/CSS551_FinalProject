@@ -65,6 +65,7 @@ public partial class VRTheWorld : MonoBehaviour
         if (btn == 0)
         {
             btnSelected = dropBtnNode;
+            Debug.Log(btnSelected.gameObject.name);
         }
         else if (btn == 1)
         {
@@ -75,6 +76,7 @@ public partial class VRTheWorld : MonoBehaviour
 
     private Vector3 ButtonLower()
     {
+        Debug.Log(btnSelected.gameObject.name);
         Vector3 btnPos = btnSelected.localPosition;
         if (btnPos.y > -0.09f)
         {

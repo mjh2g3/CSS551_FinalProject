@@ -27,6 +27,7 @@ public partial class VRTheWorld : MonoBehaviour
         Debug.Assert(dropBtnNode != null);
         Debug.Assert(resetBtnNode != null);
 
+
         stickNormal = (jointEndNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition()
                     - jointBaseNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition()).normalized;
     }
@@ -53,7 +54,7 @@ public partial class VRTheWorld : MonoBehaviour
         }
 
         // change origin of the controller to an offset away from the camera
-        //TheControllerRoot.NodeOrigin = player.position + new Vector3(0, 2, -2);
+        TheControllerRoot.NodeOrigin = player.position + new Vector3(0, 1, 0.7f);
     }
 
     public void MovePlayer(float x, float z) {
