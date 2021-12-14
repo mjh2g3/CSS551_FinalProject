@@ -66,6 +66,7 @@ public class CameraSwitchAndManip : MonoBehaviour
 
     private void CameraSwitch()
     {
+        /*
         leftController.TryGetFeatureValue(CommonUsages.grip, out float gripValue);
         if (gripValue > 0.1f)
         {
@@ -92,14 +93,12 @@ public class CameraSwitchAndManip : MonoBehaviour
         {
             currentlySwitching = false;
         }
-
+        */
         rightController.TryGetFeatureValue(CommonUsages.grip, out float gripValue1);
         if (gripValue1 > 0.1f)
         {
             if (!currentlySwitching) {
-                Debug.Log("Pressing grip");
-                Debug.Log("The grip value = " + gripValue);
-
+               
                 //Perform camera switch
                 if (mainCam.enabled)
                 {

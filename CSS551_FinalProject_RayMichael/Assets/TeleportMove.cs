@@ -10,6 +10,7 @@ public class TeleportMove : MonoBehaviour
     private InputDevice rightController;
     public bool teleportActive = false;
     public Transform LeftHand = null;
+    private bool currentlySwitching = false;
 
     // Start is called before the first frame update
     void Start()
@@ -65,18 +66,28 @@ public class TeleportMove : MonoBehaviour
         leftController.TryGetFeatureValue(CommonUsages.grip, out float gripValue);
         if (gripValue > 0.0f)
         {
-            if (!teleportActive)
+            if (!currentlySwitching)
             {
-                XRRayInteractor xri = LeftHand.GetComponent<XRRayInteractor>();
-                xri.raycastMask = 8;
-                teleportActive = true;
+                if (!teleportActive)
+                {
+                    XRRayInteractor xri = LeftHand.GetComponent<XRRayInteractor>();
+                    xri.raycastMask = 8;
+                    teleportActive = true;
+                }
+                else if (teleportActive)
+                {
+                    XRRayInteractor xri = LeftHand.GetComponent<XRRayInteractor>();
+                    xri.raycastMask = -1;
+                    teleportActive = false;
+                }
+                currentlySwitching = true;
+
             }
-            else if (teleportActive)
-            {
-                XRRayInteractor xri = LeftHand.GetComponent<XRRayInteractor>();
-                xri.raycastMask = -1;
-                teleportActive = false;
-            }
+
+        }
+        else
+        {
+            currentlySwitching = false;
         }
     }
 
