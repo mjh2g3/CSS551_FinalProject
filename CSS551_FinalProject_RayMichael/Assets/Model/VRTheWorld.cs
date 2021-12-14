@@ -62,7 +62,7 @@ public partial class VRTheWorld : MonoBehaviour
     }
 
     public void MovePlayer(float x, float z) {
-        player.position += new Vector3 (x, 0, z) / 20f;
+        player.position += player.right * x/20 + player.forward * z/20;
     }
 
     public void UpdateController() {
