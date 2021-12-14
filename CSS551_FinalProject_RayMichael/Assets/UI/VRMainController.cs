@@ -87,46 +87,41 @@ public partial class VRMainController : MonoBehaviour
     private void LMCB()
     {
         leftController.TryGetFeatureValue(CommonUsages.trigger, out float triggerValue);
-        if (triggerValue > 0.1f)
-        {
-            Debug.Log("Left trigger pressed");
-            // RaycastHit hitInfo = new RaycastHit();
-            // bool hit = Physics.Raycast(LeftHand.position, LeftHand.forward, out hitInfo, Mathf.Infinity);
-            // if (hit)
-            // {
-            //     if (ComputeHandleDetectionRayCast(LeftHand.position, hitInfo.point))
-            //     {
-            //         handleSelected = true;
-            //         //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
-            //     }
-            //     else if (ComputeDropDetectionRayCast(LeftHand.position, hitInfo.point))
-            //     {
-            //         Drop = true;
-            //         mModel.clawActionFlag = "drop";
-            //         mModel.PushButton(0);
-            //     }
-            //     else if (ComputeResetDetectionRayCast(LeftHand.position, hitInfo.point))
-            //     {
-            //         mModel.PushButton(1);
-            //         ResetClaw();
-            //     }
-            // }
-
-            
-            bool HandleOperation, DropBtnOperation, ResetBtnOperation;
-            HandleOperation = ComputeHandleDetection(LeftHand.position);
-            DropBtnOperation = ComputeDropDetection(LeftHand.position);
-            ResetBtnOperation = ComputeResetDetection(LeftHand.position);
-            if (HandleOperation)
+        if (triggerValue > 0.7f) {
+            if (!handleSelected && !buttonSelected)
             {
-                handleSelected = true;
-                //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
+                Debug.Log("Left trigger pressed");
+                
+                bool HandleOperation, DropBtnOperation, ResetBtnOperation;
+                HandleOperation = ComputeHandleDetection(LeftHand.position);
+                DropBtnOperation = ComputeDropDetection(LeftHand.position);
+                ResetBtnOperation = ComputeResetDetection(LeftHand.position);
+                if (HandleOperation)
+                {
+                    handleSelected = true;
+                    prevControllerPos = LeftHand.position;
+                } 
+                else if (DropBtnOperation && ResetBtnOperation) 
+                {
+                    Debug.Log("closest button pressed");
+                    buttonSelected = true;
+                    ClosestButton(LeftHand.position);
+                }
             } 
-            else if (DropBtnOperation && ResetBtnOperation) 
+            else if (handleSelected)
             {
-                Debug.Log("closest button pressed");
-                ClosestButton(LeftHand.position);
+                mModel.UpdateJointRotation(prevControllerPos, LeftHand.position);
             }
+            else if (buttonSelected)
+            {
+                Debug.Log("Claw dropping/resetting");
+            }
+        }
+        else
+        {
+            buttonSelected = false;
+            handleSelected = false;
+            Debug.Log("Left trigger released");
         }
 
     }  
@@ -144,7 +139,7 @@ public partial class VRMainController : MonoBehaviour
             {
                 if (ComputeHandleDetectionRayCast(RightHand.position, hitInfo.point))
                 {
-                    //handleSelected = true;
+                    handleSelected = true;
                     //prevMousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition + depthBuffer);
                 }
                 else if (ComputeDropDetectionRayCast(RightHand.position, hitInfo.point))
