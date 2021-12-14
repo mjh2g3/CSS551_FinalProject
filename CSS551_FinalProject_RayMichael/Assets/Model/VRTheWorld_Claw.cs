@@ -121,8 +121,6 @@ public partial class VRTheWorld : MonoBehaviour
     public Vector3 UpdateClawPosition(Vector3 pos)
     {
         Vector3 curPos = clawPos.localPosition;
-        curPos.x = pos.x;
-        curPos.z = pos.z;
         curPos.y = pos.y;
         clawPos.localPosition = curPos;
         return clawPos.localPosition;
