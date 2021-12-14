@@ -6,10 +6,11 @@ public partial class VRMainController : MonoBehaviour
 {
     // Controller Handle
     private bool handleSelected = false;
-    private Vector3 prevMousePos;
+    private Vector3 prevControllerPos;
     private Vector3 depthBuffer = new Vector3(0, 0, 20);
 
     //Controller Buttons
+    private bool buttonSelected = false;
     public NodePrimitive handle;
     public NodePrimitive dropBtn;
     public NodePrimitive resetBtn;
@@ -50,12 +51,11 @@ public partial class VRMainController : MonoBehaviour
         Vector3 X = handle.GetLocalPosition() - pos1;
 
         Vector3 scaleHandle = handle.GetLocalScale();
-        float r = scaleHandle.x * 0.5f;
 
         float d;
-
         d = X.magnitude;
-        if (d < r)
+
+        if (d < 1)
         {
             hit = true;
         }

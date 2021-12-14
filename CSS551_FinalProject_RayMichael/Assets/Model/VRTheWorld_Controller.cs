@@ -18,47 +18,17 @@ public partial class VRTheWorld : MonoBehaviour
 
     private Vector2 mDir2 = Vector2.up;
 
-    //public void UpdateJointRotation(float dx, float dy)
-    //public void UpdateJointRotation(Vector2 p0, Vector2 p1, float kPixelToDegree)
-    public Vector3 UpdateJointRotation(Vector3 p2, Vector3 pHandle)
-    {
-        Vector3 v = p2 - jointBaseNode.localPosition;
-        float vMagnitude = v.magnitude;
-        v /= vMagnitude;
-
-        Vector3 vHandle = pHandle - jointBaseNode.localPosition;
-        float d = Vector3.Dot(vHandle, v);
-
-        Vector3 vNextEnd = jointBaseNode.localPosition + v * d;
-        Debug.Log("vNextEnd point = " + vNextEnd);
-        Vector3 vNext = vNextEnd - jointBaseNode.localPosition;
-        Debug.Log("joint node pos  " + jointBaseNode.localPosition);
-
-
-        //jointBaseNode.rotation = Quaternion.FromToRotation(vHandle, vNextEnd);
-        jointBaseNode.rotation = Quaternion.FromToRotation(vNextEnd, vHandle);
-
-        return vNext;//
-
-    }
-
-    public void UpdateJointRotation2(Vector3 prevMousePos, Vector3 currentMousePos)
+    public void UpdateJointRotation(Vector3 prevPos, Vector3 currentPos)
     {
         Vector3 jointNodePos = jointBaseNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition();
-        Vector3 to = prevMousePos - jointNodePos;
-        Vector3 from = currentMousePos - jointNodePos; ;
-
-        Debug.Log("joinNodePos: " + jointNodePos);
-        Debug.Log("from: " + from);
-        Debug.Log("to: " + to);
+        Vector3 from = prevPos - jointNodePos;
+        Vector3 to = currentPos - jointNodePos;
 
         Quaternion q = Quaternion.FromToRotation(from, to);
 
         jointBaseNode.up = stickNormal;
         jointBaseNode.localRotation *= q;
     }
-
-
 
     public void PushButton(int btn)
     {
