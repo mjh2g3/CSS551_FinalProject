@@ -28,6 +28,43 @@ public partial class VRTheWorld : MonoBehaviour
 
         jointBaseNode.up = stickNormal;
         jointBaseNode.localRotation *= q;
+
+        UpdateCranePosition();
+
+    }
+
+    private void UpdateCranePosition() {
+        Vector3 movement = jointEndNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition()
+                            -jointBaseNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition();
+        bool inLeftWall, inRightWall, inBackWall, inFrontWall;
+        inLeftWall = clawPos.position.x >= -6;
+        inRightWall = clawPos.position.x <= 6;
+        inBackWall = clawPos.position.z <= 6;
+        inFrontWall = clawPos.position.z >= -6;
+
+        if (inLeftWall && inRightWall && inBackWall && inFrontWall) 
+        {  
+            clawPos.position += new Vector3(movement.x, 0, movement.z) * 2;
+        }
+        else
+        {
+            if (!inLeftWall) 
+            {
+                clawPos.position = new Vector3(-6, clawPos.position.y, clawPos.position.z);
+            }
+            if (!inRightWall) 
+            {
+                clawPos.position = new Vector3(6, clawPos.position.y, clawPos.position.z);
+            }
+            if (!inBackWall) 
+            {
+                clawPos.position = new Vector3(clawPos.position.x, clawPos.position.y, 6);
+            }
+            if (!inFrontWall) 
+            {
+                clawPos.position = new Vector3(clawPos.position.x, clawPos.position.y, -6);
+            }
+        }
     }
 
     public void PushButton(int btn)
@@ -35,7 +72,6 @@ public partial class VRTheWorld : MonoBehaviour
         if (btn == 0)
         {
             btnSelected = dropBtnNode;
-            Debug.Log(btnSelected.gameObject.name);
         }
         else if (btn == 1)
         {
