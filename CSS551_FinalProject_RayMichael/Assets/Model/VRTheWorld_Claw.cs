@@ -8,21 +8,52 @@ public partial class VRTheWorld : MonoBehaviour
     public Transform clawBase;
     public List<Transform> clawNodes;
     public string clawActionFlag;
-    private float rotateSpeed, moveSpeed;
+    private float rotateSpeed;
 
     public Transform clawPos = null;
 
     private float grabThreshold = 2f;
     public Transform mGrabbed = null;
+    public bool clawFull = false;
+    public Transform prizeListObj;
 
     public Camera clawCam = null;
     public List<Transform> prizes;
     public Transform DropZone = null;
     private float spawnTimer = 0.0f;
 
-    public void SetClawAction(string s)
-    {
-        clawActionFlag = s;
+    private void UpdateCranePosition() {
+        Vector3 movement = jointEndNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition()
+                            -jointBaseNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition();
+        bool inLeftWall, inRightWall, inBackWall, inFrontWall;
+        inLeftWall = clawPos.position.x >= -6;
+        inRightWall = clawPos.position.x <= 6;
+        inBackWall = clawPos.position.z <= 6;
+        inFrontWall = clawPos.position.z >= -6;
+
+        if (inLeftWall && inRightWall && inBackWall && inFrontWall) 
+        {  
+            clawPos.position += new Vector3(movement.x, 0, movement.z) / 2;
+        }
+        else
+        {
+            if (!inLeftWall) 
+            {
+                clawPos.position = new Vector3(-6, clawPos.position.y, clawPos.position.z);
+            }
+            if (!inRightWall) 
+            {
+                clawPos.position = new Vector3(6, clawPos.position.y, clawPos.position.z);
+            }
+            if (!inBackWall) 
+            {
+                clawPos.position = new Vector3(clawPos.position.x, clawPos.position.y, 6);
+            }
+            if (!inFrontWall) 
+            {
+                clawPos.position = new Vector3(clawPos.position.x, clawPos.position.y, -6);
+            }
+        }
     }
 
     void UpdateClawAnimations()
@@ -110,12 +141,16 @@ public partial class VRTheWorld : MonoBehaviour
         }
     }
 
-    public Vector3 UpdateClawPosition(Vector3 pos)
+    public void UpdateClawPosition(Vector3 pos)
     {
         Vector3 curPos = clawPos.localPosition;
         curPos.y = pos.y;
         clawPos.localPosition = curPos;
-        return clawPos.localPosition;
+    }
+
+    public void ResetClawPosition() {
+        if (clawActionFlag == "standby")
+            clawPos.localPosition = new Vector3(0, 4, 0);
     }
 
     public void GrabPrize()
@@ -123,43 +158,75 @@ public partial class VRTheWorld : MonoBehaviour
         // checks each prize to see if a prize is grabbed
         foreach (Transform p in prizes)
         {
-            float distance = (p.position - clawPos.position).magnitude;
-            if (distance <= grabThreshold)
-            {
-                mGrabbed = p;
-                mGrabbed.parent = clawPos;
+            if (!clawFull) {
+                float distance = (p.position - clawPos.position).magnitude;
+                if (distance <= grabThreshold)
+                {
+                    mGrabbed = p;
+                    mGrabbed.parent = clawPos;
+                    clawFull = true;
 
-                break;
+                    break;
+                }
+            }
+
+        }
+    }
+
+    public void DropPrize() {
+        clawActionFlag = "open";
+        mGrabbed.parent = prizeListObj;
+    }
+
+    private void FallingPrize() {
+        if (mGrabbed.parent == prizeListObj)
+        {
+            float y;
+            if (mGrabbed.name.Contains("Cylinder"))
+                y = mGrabbed.localScale.y;
+            else 
+                y = mGrabbed.localScale.y/2;
+
+            if (mGrabbed.position.y > y) {
+                mGrabbed.position -= new Vector3(0, 1/10f, 0);
+            }
+            else 
+            {
+                mGrabbed.position = new Vector3(0, y, 0);
+                clawFull = false;
             }
         }
     }
 
-    private void RespawnPize()
+    private void RespawnPrize()
     {
         Vector3 dropPos = mGrabbed.localPosition;
         Vector3 dropZone = DropZone.localPosition;
-        float LRedge = 1.0f;
-        float TBedge = 1.0f;
-        //Check if between left and right ledges
-        if ((dropPos.x < dropZone.x + LRedge) && (dropPos.x > dropZone.x - LRedge))
-        {
-            if ((dropPos.z < dropZone.z + TBedge) && (dropPos.z > dropZone.z - TBedge))
+        float LRedge = 0.2f;
+        float TBedge = 0.2f;
+        if (dropPos.y < 0.3f) {
+            //Check if between left and right ledges
+            if ((dropPos.x < dropZone.x + LRedge) && (dropPos.x > dropZone.x - LRedge))
             {
-                spawnTimer += Time.deltaTime;
-                if (spawnTimer < 3.0f)
+                if ((dropPos.z < dropZone.z + TBedge) && (dropPos.z > dropZone.z - TBedge))
                 {
-                    Debug.Log(mGrabbed.localPosition);
+                    spawnTimer += Time.deltaTime;
+                    if (spawnTimer < 3.0f)
+                    {
+                        Debug.Log(mGrabbed.localPosition);
+                    }
+                    else
+                    {
+                        ComputeNewPrizePos();
+                    }
+                    
                 }
-                else
-                {
-                    ComputeNewPos();
-                }
-                
             }
         }
+        
     }
 
-    private void ComputeNewPos()
+    private void ComputeNewPrizePos()
     {
         Debug.Log("Computing new position!");
         float y = 0.0f;

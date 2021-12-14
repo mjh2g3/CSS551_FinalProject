@@ -13,6 +13,7 @@ public partial class VRMainController : MonoBehaviour
     private bool buttonSelected = false;
     public NodePrimitive handle;
     public NodePrimitive dropBtn;
+    public NodePrimitive releaseBtn;
     public NodePrimitive resetBtn;
     private string pressedButton;
     private bool Drop = false;
@@ -102,7 +103,6 @@ public partial class VRMainController : MonoBehaviour
         float r = scaleBtn.y * 0.5f;
 
         float d = X.magnitude;
-        Debug.Log("d dropBtn: " + d);
 
         if (d < 1)
         {
@@ -149,7 +149,6 @@ public partial class VRMainController : MonoBehaviour
         float d;
         d = X.magnitude;
 
-        Debug.Log("d resetBtn: " + d);
         if (d < 1)
         {
             hit = true;
@@ -158,24 +157,35 @@ public partial class VRMainController : MonoBehaviour
         return hit;
     }
 
-    private void ClosestButton(Vector3 pos1) 
+    private void PressClosestButton(Vector3 pos1) 
     {
-        float dropBtnDist, resetBtnDist;
+        float dropBtnDist, resetBtnDist, releaseBtnDist;
         dropBtnDist = (dropBtn.GetLocalPosition() - pos1).sqrMagnitude;
         resetBtnDist = (resetBtn.GetLocalPosition() - pos1).sqrMagnitude;
-        // Debug.Log("dropBtnDist: " + dropBtnDist);
-        // Debug.Log("resetBtnDist: " + resetBtnDist);
-        if (dropBtnDist < resetBtnDist) 
+        releaseBtnDist = (releaseBtn.GetLocalPosition() - pos1).sqrMagnitude;
+        float[] buttons = {dropBtnDist, resetBtnDist, releaseBtnDist};
+        if (Mathf.Min(buttons) == dropBtnDist) 
         {
-            Drop = true;
-            mModel.clawActionFlag = "drop";
+            Debug.Log("You hit the drop button!");
+            if (!mModel.clawFull)
+            {
+                Drop = true;
+                mModel.clawActionFlag = "drop";
+            }    
             mModel.PushButton(0);
         } 
+        else if (Mathf.Min(buttons) == releaseBtnDist)
+        {
+            Debug.Log("You hit the release button!");
+            mModel.PushButton(1);
+            if (mModel.clawFull)
+                mModel.DropPrize();
+        }
         else 
         {
             Debug.Log("You hit the reset button!");
-            mModel.PushButton(1);
-            ResetClaw(); 
+            mModel.PushButton(2);
+            mModel.ResetClawPosition();
         }
     }
 }
