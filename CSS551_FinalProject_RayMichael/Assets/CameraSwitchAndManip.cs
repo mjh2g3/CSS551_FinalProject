@@ -31,8 +31,8 @@ public class CameraSwitchAndManip : MonoBehaviour
         else
         {
             CameraSwitch();
-            
         }
+        RotateCamera();
     }
 
     private void InitDevices()
@@ -108,6 +108,8 @@ public class CameraSwitchAndManip : MonoBehaviour
                 else if (craneCam.enabled)
                 {
                     craneCam.enabled = false;
+                    craneCam.transform.up = -Vector3.up;
+
                     mainCam.enabled = true;
                 }
 
@@ -118,5 +120,11 @@ public class CameraSwitchAndManip : MonoBehaviour
         {
             currentlySwitching = false;
         }
+    }
+
+    private void RotateCamera() 
+    {
+        craneCam.transform.forward = -Vector3.up;
+        craneCam.transform.localRotation *= mainCam.transform.localRotation;
     }
 }
