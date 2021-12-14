@@ -23,7 +23,7 @@ public partial class VRMainController : MonoBehaviour
             pos.y = pos.y + (speed + 0.75f) * -1.0f * Time.deltaTime;
             clawPos.y += pos.y;
             // Debug.Log(clawPos);
-            clawPos = mModel.UpdateClawPosition(clawPos);
+            mModel.UpdateClawPosition(clawPos);
             // Debug.Log("Dropping the claw");
         }
         else if (mModel.clawActionFlag == "drop")
@@ -46,27 +46,13 @@ public partial class VRMainController : MonoBehaviour
             pos.y = pos.y + (speed + 0.75f) * 1.0f * Time.deltaTime;
             clawPos.y += pos.y;
             // Debug.Log(clawPos);
-            clawPos = mModel.UpdateClawPosition(clawPos);
+            mModel.UpdateClawPosition(clawPos);
             // Debug.Log("Lifting the claw");
         }
         else
         {
             mModel.clawActionFlag = "standby";
             Lift = false;
-        }
-    }
-
-    private void ResetClaw()
-    {
-        if (mModel.clawActionFlag == "standby") {
-            //Reset the claw to original position
-            Vector3 orig = new Vector3();
-            orig.y = 4.0f;
-            orig.x = 0.0f;
-            orig.z = 0.0f;
-            clawPos = mModel.UpdateClawPosition(orig);
-
-            Drop = false;
         }
     }
 

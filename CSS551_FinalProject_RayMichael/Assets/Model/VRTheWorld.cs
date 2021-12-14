@@ -16,7 +16,6 @@ public partial class VRTheWorld : MonoBehaviour
         Debug.Assert(TheControllerRoot != null);
 
         rotateSpeed = 1 / 3f;
-        moveSpeed = 1 / 360f;
 
         clawActionFlag = "standby";
 
@@ -58,7 +57,8 @@ public partial class VRTheWorld : MonoBehaviour
 
         if (mGrabbed != null)
         {
-            RespawnPize();
+            RespawnPrize();
+            FallingPrize();
         }
     }
 

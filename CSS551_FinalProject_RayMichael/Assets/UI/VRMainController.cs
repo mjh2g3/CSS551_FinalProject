@@ -125,14 +125,9 @@ public partial class VRMainController : MonoBehaviour
                 ResetBtnOperation = ComputeResetDetection(RightHand.position);
                 if (DropBtnOperation || ResetBtnOperation) 
                 {
-                    Debug.Log("closest button pressed");
                     buttonSelected = true;
-                    ClosestButton(RightHand.position);
+                    PressClosestButton(RightHand.position);
                 }
-            }
-            else if (buttonSelected)
-            {
-                Debug.Log("Claw dropping/resetting");
             }
         }
         else

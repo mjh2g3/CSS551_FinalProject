@@ -8,6 +8,7 @@ public partial class VRTheWorld : MonoBehaviour
     public Transform jointEndNode = null;
     private Vector3 stickNormal;
     public Transform dropBtnNode = null;
+    public Transform releaseBtnNode = null;
     public Transform resetBtnNode = null;
 
     private Transform btnSelected;
@@ -33,40 +34,6 @@ public partial class VRTheWorld : MonoBehaviour
 
     }
 
-    private void UpdateCranePosition() {
-        Vector3 movement = jointEndNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition()
-                            -jointBaseNode.GetComponent<SceneNode>().PrimitiveList[0].GetLocalPosition();
-        bool inLeftWall, inRightWall, inBackWall, inFrontWall;
-        inLeftWall = clawPos.position.x >= -6;
-        inRightWall = clawPos.position.x <= 6;
-        inBackWall = clawPos.position.z <= 6;
-        inFrontWall = clawPos.position.z >= -6;
-
-        if (inLeftWall && inRightWall && inBackWall && inFrontWall) 
-        {  
-            clawPos.position += new Vector3(movement.x, 0, movement.z) * 2;
-        }
-        else
-        {
-            if (!inLeftWall) 
-            {
-                clawPos.position = new Vector3(-6, clawPos.position.y, clawPos.position.z);
-            }
-            if (!inRightWall) 
-            {
-                clawPos.position = new Vector3(6, clawPos.position.y, clawPos.position.z);
-            }
-            if (!inBackWall) 
-            {
-                clawPos.position = new Vector3(clawPos.position.x, clawPos.position.y, 6);
-            }
-            if (!inFrontWall) 
-            {
-                clawPos.position = new Vector3(clawPos.position.x, clawPos.position.y, -6);
-            }
-        }
-    }
-
     public void PushButton(int btn)
     {
         if (btn == 0)
@@ -75,6 +42,10 @@ public partial class VRTheWorld : MonoBehaviour
         }
         else if (btn == 1)
         {
+            btnSelected = releaseBtnNode;
+        }
+        else
+        {
             btnSelected = resetBtnNode;
         }
         buttonPressDown = true;
@@ -82,7 +53,6 @@ public partial class VRTheWorld : MonoBehaviour
 
     private Vector3 ButtonLower()
     {
-        Debug.Log(btnSelected.gameObject.name);
         Vector3 btnPos = btnSelected.localPosition;
         if (btnPos.y > -0.09f)
         {
@@ -90,7 +60,6 @@ public partial class VRTheWorld : MonoBehaviour
             pos.y = pos.y + (speed) * -1.0f * Time.deltaTime;
             btnPos.y += pos.y;
             btnSelected.localPosition = btnPos;
-           
         }
         else
         {

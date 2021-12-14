@@ -69,39 +69,55 @@ public class CameraSwitchAndManip : MonoBehaviour
         leftController.TryGetFeatureValue(CommonUsages.grip, out float gripValue);
         if (gripValue > 0.1f)
         {
-            Debug.Log("Pressing grip");
-            Debug.Log("The grip value = " + gripValue);
+            if (!currentlySwitching) {
+                Debug.Log("Pressing grip");
+                Debug.Log("The grip value = " + gripValue);
 
-            //Perform camera switch
-            if (mainCam.enabled)
-            {
-                mainCam.enabled = false;
-                craneCam.enabled = true;
+                //Perform camera switch
+                if (mainCam.enabled)
+                {
+                    mainCam.enabled = false;
+                    craneCam.enabled = true;
+                }
+                else if (craneCam.enabled)
+                {
+                    craneCam.enabled = false;
+                    mainCam.enabled = true;
+                }
+
+                currentlySwitching = true;
             }
-            else if (craneCam.enabled)
-            {
-                craneCam.enabled = false;
-                mainCam.enabled = true;
-            }
+        }
+        else 
+        {
+            currentlySwitching = false;
         }
 
         rightController.TryGetFeatureValue(CommonUsages.grip, out float gripValue1);
         if (gripValue1 > 0.1f)
         {
-            Debug.Log("Pressing grip");
-            Debug.Log("The grip value = " + gripValue1);
+            if (!currentlySwitching) {
+                Debug.Log("Pressing grip");
+                Debug.Log("The grip value = " + gripValue);
 
-            //Perform camera switch
-            if (mainCam.enabled)
-            {
-                mainCam.enabled = false;
-                craneCam.enabled = true;
+                //Perform camera switch
+                if (mainCam.enabled)
+                {
+                    mainCam.enabled = false;
+                    craneCam.enabled = true;
+                }
+                else if (craneCam.enabled)
+                {
+                    craneCam.enabled = false;
+                    mainCam.enabled = true;
+                }
+
+                currentlySwitching = true;
             }
-            else if (craneCam.enabled)
-            {
-                craneCam.enabled = false;
-                mainCam.enabled = true;
-            }
+        }
+        else 
+        {
+            currentlySwitching = false;
         }
     }
 }
