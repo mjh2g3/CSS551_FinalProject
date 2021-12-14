@@ -13,10 +13,12 @@ public partial class VRTheWorld : MonoBehaviour
     public Transform clawPos = null;
 
     private float grabThreshold = 2f;
-    private Transform mGrabbed = null;
+    public Transform mGrabbed = null;
 
     public Camera clawCam = null;
     public List<Transform> prizes;
+    public Transform DropZone = null;
+    private float spawnTimer = 0.0f;
 
     public void SetClawAction(string s)
     {
@@ -142,6 +144,71 @@ public partial class VRTheWorld : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private void RespawnPize()
+    {
+        Vector3 dropPos = mGrabbed.localPosition;
+        Vector3 dropZone = DropZone.localPosition;
+        float LRedge = 1.0f;
+        float TBedge = 1.0f;
+        //Check if between left and right ledges
+        if ((dropPos.x < dropZone.x + LRedge) && (dropPos.x > dropZone.x - LRedge))
+        {
+            if ((dropPos.z < dropZone.z + TBedge) && (dropPos.z > dropZone.z - TBedge))
+            {
+                spawnTimer += Time.deltaTime;
+                if (spawnTimer < 3.0f)
+                {
+                    Debug.Log(mGrabbed.localPosition);
+                }
+                else
+                {
+                    ComputeNewPos();
+                }
+                
+            }
+        }
+    }
+
+    private void ComputeNewPos()
+    {
+        Debug.Log("Computing new position!");
+        float y = 0.0f;
+        if (mGrabbed.name.Contains("Cylinder"))
+        {
+            y = 0.25f;
+        }
+
+        Vector3 position = new Vector3(Random.Range(-5.0f, 5.0f), y, Random.Range(-5.0f, 5.0f));
+        for (int i = 0; i < prizes.Count; i++)
+        {
+            Vector3 p = prizes[i].localPosition;
+            float mag = (p - position).magnitude;
+            if (mag < 1.0f)
+            {
+                if ((position.x + 1.0f) < 5.0f)
+                {
+                    position.x += 1.0f;
+                }
+                else if ((position.x - 1.0f) > -5.0f)
+                {
+                    position.x -= 1.0f;
+                }
+                else if ((position.z + 1.0f) < 5.0f)
+                {
+                    position.z -= 1.0f;
+                }
+                else if ((position.z - 1.0f) > -5.0f)
+                {
+                    position.z -= 1.0f;
+                }
+            }
+        }
+
+        mGrabbed.localPosition = position;
+        mGrabbed = null;
+        spawnTimer = 0.0f;
     }
 
     public void UpdateClawCam()
