@@ -12,7 +12,7 @@ public partial class VRTheWorld : MonoBehaviour
 
     public Transform clawPos = null;
 
-    private float grabThreshold = 2f;
+    private float grabThreshold = 1.5f;
     public Transform mGrabbed = null;
     public bool clawFull = false;
     public Transform prizeListObj;
@@ -179,7 +179,7 @@ public partial class VRTheWorld : MonoBehaviour
     }
 
     private void FallingPrize() {
-        if (mGrabbed.parent == prizeListObj)
+        if (mGrabbed != null && mGrabbed.parent == prizeListObj)
         {
             float y;
             if (mGrabbed.name.Contains("Cylinder"))
@@ -192,7 +192,7 @@ public partial class VRTheWorld : MonoBehaviour
             }
             else 
             {
-                mGrabbed.position = new Vector3(0, y, 0);
+                mGrabbed.position += new Vector3(0, y - mGrabbed.position.y, 0);
                 clawFull = false;
             }
         }
@@ -202,8 +202,8 @@ public partial class VRTheWorld : MonoBehaviour
     {
         Vector3 dropPos = mGrabbed.localPosition;
         Vector3 dropZone = DropZone.localPosition;
-        float LRedge = 0.2f;
-        float TBedge = 0.2f;
+        float LRedge = 1;
+        float TBedge = 1;
         if (dropPos.y < 0.3f) {
             //Check if between left and right ledges
             if ((dropPos.x < dropZone.x + LRedge) && (dropPos.x > dropZone.x - LRedge))

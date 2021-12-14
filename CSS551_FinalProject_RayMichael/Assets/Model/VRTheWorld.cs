@@ -8,6 +8,7 @@ public partial class VRTheWorld : MonoBehaviour
     public SceneNode TheClawRoot;
     public SceneNode TheControllerRoot;
     public Transform player;
+    private float currentAngle = 0;
     
     // Start is called before the first frame update
     void Start()
@@ -42,6 +43,7 @@ public partial class VRTheWorld : MonoBehaviour
 
         UpdateClawAnimations();
         UpdateClawCam();
+        UpdateController();
 
         if (buttonPressDown)
         {
@@ -52,9 +54,6 @@ public partial class VRTheWorld : MonoBehaviour
             ButtonRise();
         }
 
-        // change origin of the controller to an offset away from the camera
-        TheControllerRoot.NodeOrigin = player.position + new Vector3(0, 0.7f, 0.5f);
-
         if (mGrabbed != null)
         {
             RespawnPrize();
@@ -64,5 +63,16 @@ public partial class VRTheWorld : MonoBehaviour
 
     public void MovePlayer(float x, float z) {
         player.position += new Vector3 (x, 0, z) / 20f;
+    }
+
+    public void UpdateController() {
+        Transform controllerTransform = TheControllerRoot.gameObject.transform;
+        if (currentAngle != player.eulerAngles.y) 
+        {
+            controllerTransform.RotateAround(player.position, player.up, player.eulerAngles.y - currentAngle);
+            currentAngle = player.eulerAngles.y;
+        }
+
+        controllerTransform.position = player.position + player.up * 0.6f + player.forward * 0.5f;
     }
 }
