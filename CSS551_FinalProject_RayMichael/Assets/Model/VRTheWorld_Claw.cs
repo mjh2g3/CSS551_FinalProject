@@ -76,14 +76,6 @@ public partial class VRTheWorld : MonoBehaviour
         }
     }
 
-    void RaisingClawAnimation()
-    {
-        if (clawBase.position.y <= 5)
-        {
-            clawBase.position += new Vector3(0, moveSpeed, 0);
-        }
-    }
-
     void OpeningClawAnimation()
     {
         if (clawNodes[0].localEulerAngles.z < 75)
@@ -137,8 +129,6 @@ public partial class VRTheWorld : MonoBehaviour
                 mGrabbed = p;
                 mGrabbed.parent = clawPos;
 
-                float localY = -(1f);
-                clawPos.localPosition = new Vector3(0, localY, 0);
                 break;
             }
         }
