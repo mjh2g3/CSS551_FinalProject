@@ -201,7 +201,7 @@ public partial class VRTheWorld : MonoBehaviour
 
     public void UpdateClawCam()
     {
-        clawCam.transform.forward = clawPos.transform.up;
+        //clawCam.transform.forward = clawPos.transform.up;
         clawCam.transform.localPosition = clawPos.transform.localPosition;
     }
 }

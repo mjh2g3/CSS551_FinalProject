@@ -88,7 +88,7 @@ public class CameraSwitchAndManip : MonoBehaviour
         */
 
         rightController.TryGetFeatureValue(CommonUsages.grip, out float gripValue1);
-        if (gripValue1 > 0.1f)
+        if (gripValue1 > 0.0f)
         {
             Debug.Log("Pressing grip");
             Debug.Log("The grip value = " + gripValue1);

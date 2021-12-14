@@ -66,35 +66,14 @@ public class CraneCam : MonoBehaviour
 
     private void CraneCamMove()
     {
-        leftController.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 joyV1);
-        if (joyV1.y == 1.0f)
-        {
-            if (curDegrees < 45.0f)
-            {
-                curDegrees += 1.0f * Time.deltaTime;
-                Debug.Log(curDegrees);
-            }
-            curAxis = craneCam.transform.right;
-        }
-        else if (joyV1.y == -1.0f)
-        {
-            //Move down
-            curAxis = craneCam.transform.right;
-
-        }
-        else if (joyV1.x == 1.0f)
-        {
-            //Move right
-        }
-        else if (joyV1.x == -1.0f)
-        {
-            //move left
-        }
-
+        
         rightController.TryGetFeatureValue(CommonUsages.primary2DAxis, out Vector2 joyV2);
         if (joyV2.y == 1.0f)
         {
             //move up
+            curDegrees += 0.1f * Time.deltaTime;
+            Debug.Log(curDegrees);
+            
             curAxis = craneCam.transform.right;
 
         }
@@ -112,8 +91,14 @@ public class CraneCam : MonoBehaviour
         {
             //move left
         }
-
-        Quaternion q = Quaternion.AngleAxis(curDegrees, curAxis);
-        craneCam.transform.localRotation *= q;
+        if (curDegrees < 0.25f)
+        {
+            Quaternion q = Quaternion.AngleAxis(curDegrees, curAxis);
+            craneCam.transform.localRotation *= q;
+        }
+        else
+        {
+            curDegrees = 0.0f;
+        }
     }
 }
